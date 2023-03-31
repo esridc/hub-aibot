@@ -8,7 +8,7 @@
     const placeholderEl = document.getElementById("placeholder");
     const botEl = document.createElement("hub-aibot");
     botEl.apikey = urlParams.get('key');
-
+    botEl.model = urlParams.get('model') || 'image';
     placeholderEl.appendChild(botEl);
     console.debug("botEl", { botEl, key: botEl.apikey })
   </script> </body></html>

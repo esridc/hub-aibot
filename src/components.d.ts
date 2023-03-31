@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface HubAibot {
         "apikey": string;
+        "model": string;
     }
 }
 declare global {
@@ -24,6 +25,7 @@ declare global {
 declare namespace LocalJSX {
     interface HubAibot {
         "apikey"?: string;
+        "model"?: string;
     }
     interface IntrinsicElements {
         "hub-aibot": HubAibot;

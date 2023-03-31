@@ -9,13 +9,19 @@ export class HubAibot {
   private chatbotRef!: HTMLDivElement;
 
   @Prop() apikey = '';
+  @Prop() model = 'text'
   @State() chatOpen = false;
   @State() messages: string[] = [];
+
+  models = {
+    'text': 'https://api.openai.com/v1/chat/completions',
+    'image': 'https://api.openai.com/v1/images/generations'
+  }
 
   private async sendMessage(message: string) {
     this.messages = [...this.messages, message];
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch( this.models['text'], {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,8 +29,11 @@ export class HubAibot {
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
-        messages: [{role: "user", content: message}],
-        temperature: 0.7
+        messages: [
+          {"role": "system", "content": "You are writing for a government websites readable by 8th graders."},
+          {role: "user", content: message}
+        ],
+        temperature: 0.4
       }),
     });
 
@@ -35,6 +44,27 @@ export class HubAibot {
     this.messages = [...this.messages, text];
   }
 
+  private async getImage(message: string) {
+    this.messages = [...this.messages, message];
+
+    const response = await fetch( this.models['image'], {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apikey}`,
+      },
+      body: JSON.stringify({
+        prompt: message,
+      }),
+    });
+
+    const data = await response.json();
+    const imageUrl = data.data[0]?.url;
+
+    console.debug("response", {imageUrl})
+    this.messages = [...this.messages, imageUrl];
+  }  
+
   private toggleChat() {
     this.chatOpen = !this.chatOpen;
   }
@@ -43,7 +73,17 @@ export class HubAibot {
     if (event.key === 'Enter' && event.shiftKey === false) {
       event.preventDefault();
       const message = this.chatbotRef.textContent?.trim() || '';
-      this.sendMessage(message);
+      
+      switch(this.model){
+        case 'text': 
+          this.sendMessage(message);
+          break;
+        case 'image':
+          this.getImage(message);
+          break;
+      }
+      
+      
       this.chatbotRef.textContent = '';
     }
   }

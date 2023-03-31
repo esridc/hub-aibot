@@ -1,0 +1,46 @@
+{
+  "name": "hub-aibot",
+  "version": "0.0.1",
+  "description": "Prototype Hub User workspace",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/hub-aibot/hub-aibot.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/esridc/hub-aibot.git"
+  },
+  "contributors": [
+    {
+      "name": "Andrew Turner",
+      "email": "aturner@esri.com",
+      "url": "https://dc.esri.com/"
+    }
+  ],
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "scripts": {
+    "build": "stencil build --docs",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "generate": "stencil generate"
+  },
+  "dependencies": {
+    "@stencil/core": "^2.13.0",
+    "@types/node": "^18.14.0"
+  },
+  "devDependencies": {
+    "@esri/calcite-components": "^1.0.0-beta.97",
+    "@stencil/sass": "^2.0.0",
+    "@stencil/store": "^2.0.1",
+    "@types/geojson": "^7946.0.10"
+  },
+  "license": "MIT"
+}

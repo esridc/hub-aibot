@@ -1,0 +1,15 @@
+<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Hub AI Bot</title> <script type="module" src="./build/hub-aibot.esm.js"></script> <script nomodule="" src="./build/hub-aibot.js"></script> <!-- <link rel="stylesheet" type="text/css" href="assets/calcite.css" />
+  <script type="module" src="assets/calcite.esm.js"></script> --> </head> <body> <div id="placeholder"></div> <!-- NEVER REVEAL THIS API KEY --> <style>body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }</style> <script>
+    const urlParams = new URL(window.location).searchParams;
+
+    const placeholderEl = document.getElementById("placeholder");
+    const botEl = document.createElement("hub-aibot");
+    botEl.apikey = urlParams.get('key');
+    
+    placeholderEl.appendChild(botEl);
+    console.debug("botEl", {botEl, key: botEl.apikey})
+  </script> </body></html>

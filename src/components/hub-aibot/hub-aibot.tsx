@@ -11,14 +11,20 @@ export class HubAibot {
   @Prop() apikey = '';
   @Prop() model = 'text'
   @Prop() personality = "You are writing for a government websites readable by 8th graders.";
-  @Prop() chatOpen = false;
-  @State() messages: string[] = ["Hi! I'm Andy AI. Let me know what you're thinking..."];
+  @Prop() chatOpen:boolean = false;
+  @Prop() welcome:string = null;
+  @State() messages: string[] = [];
 
   models = {
     'text': 'https://api.openai.com/v1/chat/completions',
     'image': 'https://api.openai.com/v1/images/generations'
   }
 
+  componentWillLoad() {
+    if(!!this.welcome) {
+      this.messages.push(this.welcome);
+    }
+  }
   private async sendMessage(message: string) {
     this.messages = [...this.messages, message];
 

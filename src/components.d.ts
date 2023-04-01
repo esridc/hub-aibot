@@ -11,6 +11,7 @@ export namespace Components {
         "chatOpen": boolean;
         "model": string;
         "personality": string;
+        "welcome": string;
     }
 }
 declare global {
@@ -30,6 +31,7 @@ declare namespace LocalJSX {
         "chatOpen"?: boolean;
         "model"?: string;
         "personality"?: string;
+        "welcome"?: string;
     }
     interface IntrinsicElements {
         "hub-aibot": HubAibot;

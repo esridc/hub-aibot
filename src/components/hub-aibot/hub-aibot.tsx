@@ -11,8 +11,8 @@ export class HubAibot {
   @Prop() apikey = '';
   @Prop() model = 'text'
   @Prop() personality = "You are writing for a government websites readable by 8th graders.";
-  @State() chatOpen = false;
-  @State() messages: string[] = [];
+  @Prop() chatOpen = false;
+  @State() messages: string[] = ["Hi! I'm Andy AI. Let me know what you're thinking..."];
 
   models = {
     'text': 'https://api.openai.com/v1/chat/completions',

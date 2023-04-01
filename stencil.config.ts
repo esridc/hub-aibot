@@ -30,6 +30,9 @@ export const config: Config = {
           src: "./**/*.html",
         },
         {
+          src: "./data/*",
+        },
+        {
           src: "./**/*.json", dest: 'data/'
         }
       ]

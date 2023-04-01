@@ -10,6 +10,7 @@ export class HubAibot {
 
   @Prop() apikey = '';
   @Prop() model = 'text'
+  @Prop() personality = "You are writing for a government websites readable by 8th graders.";
   @State() chatOpen = false;
   @State() messages: string[] = [];
 
@@ -30,7 +31,7 @@ export class HubAibot {
       body: JSON.stringify({
         model: "gpt-3.5-turbo",
         messages: [
-          {"role": "system", "content": "You are writing for a government websites readable by 8th graders."},
+          {"role": "system", "content": this.personality},
           {role: "user", content: message}
         ],
         temperature: 0.4

@@ -1,2 +1,2 @@
-import{p as e,b as o}from"./p-7db66f55.js";export{s as setNonce}from"./p-7db66f55.js";const t=()=>{const s=import.meta.url;const o={};if(s!==""){o.resourcesUrl=new URL(".",s).href}return e(o)};t().then((s=>o([["p-d250ec1e",[[1,"hub-aibot",{apikey:[1],model:[1],personality:[1],chatOpen:[32],messages:[32]}]]]],s)));
+import{p as o,b as c}from"./p-c6528cc2.js";export{s as setNonce}from"./p-c6528cc2.js";const e=()=>{const s=import.meta.url;const c={};if(s!==""){c.resourcesUrl=new URL(".",s).href}return o(c)};e().then((s=>c([["p-d7d080a8",[[1,"hub-aibot",{apikey:[1],model:[1],personality:[1],chatOpen:[4,"chat-open"],messages:[32]}]]]],s)));
 //# sourceMappingURL=hub-aibot.esm.js.map

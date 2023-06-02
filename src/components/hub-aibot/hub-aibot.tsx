@@ -1,4 +1,6 @@
 import { Component, h, Prop, State } from '@stencil/core';
+import { setAssetPath } from "@esri/calcite-components/dist/components";
+setAssetPath("./assets");
 
 @Component({
   tag: 'hub-aibot',
@@ -13,7 +15,9 @@ export class HubAibot {
   @Prop() personality = "You are writing for a government websites readable by 8th graders.";
   @Prop() chatOpen:boolean = false;
   @Prop() welcome:string = null;
+
   @State() messages: string[] = [];
+  @State() loading = false;
 
   models = {
     'text': 'https://api.openai.com/v1/chat/completions',
@@ -25,8 +29,17 @@ export class HubAibot {
       this.messages.push(this.welcome);
     }
   }
-  private async sendMessage(message: string) {
+  private async sendMessage(message: string, language: string = 'en') {
     this.messages = [...this.messages, message];
+    this.loading = true;
+
+    const modelMap = {
+      en: "gpt-3.5-turbo",
+      es: 'curie',
+      fr: 'davinci',
+    };
+    const model = modelMap[language] || "gpt-3.5-turbo";
+
 
     const response = await fetch( this.models['text'], {
       method: 'POST',
@@ -35,7 +48,7 @@ export class HubAibot {
         'Authorization': `Bearer ${this.apikey}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: model,
         messages: [
           {"role": "system", "content": this.personality},
           {role: "user", content: message}
@@ -49,10 +62,12 @@ export class HubAibot {
 
     console.debug("response", {text})
     this.messages = [...this.messages, text];
+    this.loading = false;
   }
 
   private async getImage(message: string) {
     this.messages = [...this.messages, message];
+    this.loading = true;
 
     const response = await fetch( this.models['image'], {
       method: 'POST',
@@ -70,6 +85,9 @@ export class HubAibot {
 
     console.debug("response", {imageUrl})
     this.messages = [...this.messages, imageUrl];
+    
+    this.loading = false;
+
   }  
 
   private toggleChat() {
@@ -100,23 +118,51 @@ export class HubAibot {
       <div>
         {this.chatOpen ? (
           <div class="chat-window">
+            {this.renderIntro()}
             <div class="messages">
               {this.messages.map((message) => (
                 <div class="message" innerHTML={message.replace(/(?:\r\n|\r|\n)/g, '<br>')}></div>
               ))}
+              {this.loading ? this.renderLoading() : null}
             </div>
-            <div
-              class="input"
-              contentEditable={true}
-              onKeyDown={(event: KeyboardEvent) => this.handleKeyDown(event)}
-              ref={(el) => (this.chatbotRef = el!)}
-            ></div>
+            <div class="input-container">
+              <div
+                class="input"
+                contentEditable={true}
+                onKeyDown={(event: KeyboardEvent) => this.handleKeyDown(event)}
+                ref={(el) => (this.chatbotRef = el!)}
+              ></div>
+              <button class="send-button" onClick={() => this.sendMessage('en')}>
+              <calcite-icon icon="send" text-label="Send message"></calcite-icon>
+              </button>
+            </div>
+            <div class="example-prompts">
+              <button onClick={() => this.sendMessage('Tell me about your services.', 'en')}>Services</button>
+              <button onClick={() => this.sendMessage('What are your office hours?', 'en')}>Office Hours</button>
+            </div>
           </div>
         ) : null}
         <div class="fab" onClick={() => this.toggleChat()}>
-          <span class="material-icons">&#129302;</span>
+          <span class="tooltip">Open Hub Compass</span>
+          <calcite-icon class="fab-icon" icon="explore" text-label="Open Hub Compass"></calcite-icon>
         </div>
       </div>
     );
+  }
+
+  private renderLoading() {
+    return (
+      <div class="loading">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>);
+  }
+
+  private renderIntro() {
+    return <div class="intro">
+      <p>Welcome to the Hub Compass Chatbot!</p>
+      <p>How can I assist you today?</p>
+    </div>;
   }
 }

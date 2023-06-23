@@ -1,4 +1,24 @@
 
+const AIModels = {
+  'nearby': 'https://ajturner-refactored-space-cod-6rr7x76f4gg6-8000.preview.app.github.dev/chat',
+  'text': 'https://api.openai.com/v1/chat/completions',
+  'image': 'https://api.openai.com/v1/images/generations'
+}
+
+/** 
+ * Esri LLM 
+ * */
+
+export async function fetchArcGIS(message: string) {
+
+  const response = await fetch( AIModels['nearby'] + '?' + new URLSearchParams({
+    query: message
+  }));
+
+  // Currently just the text directly!
+  const text:string = await response.text();
+  return text;
+}
   /**
    * Query ChatGPT directly
    */
@@ -12,7 +32,7 @@
     const model = modelMap[language] || "gpt-3.5-turbo";
 
 
-    const response = await fetch( this.models['text'], {
+    const response = await fetch( AIModels['text'], {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +56,7 @@
 
   export async function fetchImageChat(message: string, apikey:string) {
 
-    const response = await fetch( this.models['image'], {
+    const response = await fetch( AIModels['image'], {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,9 +1,13 @@
 import { Component, h, Prop, State } from '@stencil/core';
 import { setAssetPath } from "@esri/calcite-components/dist/components";
 import { HubAIModel } from '../../types/types';
-import { fetchImageChat, fetchTextChat } from '../../util/chatgpt';
+import { fetchArcGIS, fetchImageChat, fetchTextChat } from '../../util/api';
 setAssetPath("./assets");
 
+type HubAIMessage = {
+  text:string,
+  author: string
+}
 @Component({
   tag: 'hub-aibot',
   styleUrl: 'hub-aibot.css',
@@ -19,90 +23,56 @@ export class HubAibot {
   @Prop() chatOpen:boolean = false;
   @Prop() welcome:string = null;
 
-  @State() messages: string[] = [];
+  @Prop() language:string = 'en';
+  @State() messages: HubAIMessage[] = [];
   @State() loading = false;
 
-  models = {
-    'nearby': 'http://localui.arcgis.com:8000/chat',
-    'text': 'https://api.openai.com/v1/chat/completions',
-    'image': 'https://api.openai.com/v1/images/generations'
-  }
 
   componentWillLoad() {
     if(!!this.welcome) {
-      this.messages.push(this.welcome);
+      this.messages.push({
+        author: "AI",
+        text: this.welcome       
+      });
     }
   }
-
-  /**
-   * Call the Hub Compass API - langchain
-   */
-  private async sendNearby(message: string) {
-    this.messages = [...this.messages, message];
-    this.loading = true;
-
-    const response = await fetch( this.models['nearby'] + '?' + new URLSearchParams({
-      query: message
-    }));
-
-    // Currently just the text directly!
-    const text:string = await response.text();
-
-    console.debug("response", {text})
-    this.messages = [...this.messages, text];
-    this.loading = false;
-  }
-
-  /**
-   * Query ChatGPT directly
-   */
-  private async sendMessage(message: string, language: string = 'en') {
-    this.messages = [...this.messages, message];
-    this.loading = true;
-
-    const text = await fetchTextChat(message, language, this.personality, this.apikey);
-
-    console.debug("response", {text})
-    this.messages = [...this.messages, text];
-    this.loading = false;
-  }
-
-  private async getImage(message: string) {
-    this.messages = [...this.messages, message];
-    this.loading = true;
-
-    const imageUrl = await fetchImageChat(message, this.apikey);
-
-    console.debug("response", {imageUrl})
-    this.messages = [...this.messages, imageUrl];
-    
-    this.loading = false;
-
-  }  
 
   private toggleChat() {
     this.chatOpen = !this.chatOpen;
   }
 
-  private handleKeyDown(event: KeyboardEvent) {
+  async sendMessage() {
+    const message = this.chatbotRef.textContent?.trim() || '';
+
+    this.messages = [...this.messages, {
+      author: "AI",
+      text: message}];
+    this.loading = true;
+    let text = "";
+    console.debug("calling model", [this.model, message])
+    switch(this.model){
+      case HubAIModel.Nearby: 
+        text = await fetchArcGIS(message);
+        break;
+      case HubAIModel.Text: 
+        text = await fetchTextChat(message, this.language, this.personality, this.apikey);
+        break;
+      case HubAIModel.Image:
+        text = await fetchImageChat(message, this.apikey);
+        break;
+    }
+
+    this.messages = [...this.messages, {
+      author: "AI",
+      text: text}];
+    this.loading = false;      
+    this.chatbotRef.textContent = '';
+  }
+
+  private async handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter' && event.shiftKey === false) {
       event.preventDefault();
-      const message = this.chatbotRef.textContent?.trim() || '';
-      
-      console.debug("calling model", [this.model, message])
-      switch(this.model){
-        case HubAIModel.Nearby: 
-          this.sendNearby(message);
-          break;
-        case HubAIModel.Text: 
-          this.sendMessage(message);
-          break;
-        case HubAIModel.Image:
-          this.getImage(message);
-          break;
-      }
-      
-      this.chatbotRef.textContent = '';
+      this.sendMessage();
     }
   }
 
@@ -111,10 +81,10 @@ export class HubAibot {
       <div>
         {this.chatOpen ? (
           <div class="chat-window">
-            {this.renderIntro()}
             <div class="messages">
+              {this.renderIntro()}
               {this.messages.map((message) => (
-                <div class="message" innerHTML={message.replace(/(?:\r\n|\r|\n)/g, '<br>')}></div>
+                <div class="message" innerHTML={message.text.replace(/(?:\r\n|\r|\n)/g, '<br>')}></div>
               ))}
               {this.loading ? this.renderLoading() : null}
             </div>
@@ -125,14 +95,14 @@ export class HubAibot {
                 onKeyDown={(event: KeyboardEvent) => this.handleKeyDown(event)}
                 ref={(el) => (this.chatbotRef = el!)}
               ></div>
-              <button class="send-button" onClick={() => this.sendMessage('en')}>
+              <button class="send-button" onClick={() => this.sendMessage()}>
               <calcite-icon icon="send" text-label="Send message"></calcite-icon>
               </button>
             </div>
-            <div class="example-prompts">
+            {/* <div class="example-prompts">
               <button onClick={() => this.sendMessage('Tell me about your services.', 'en')}>Services</button>
               <button onClick={() => this.sendMessage('What are your office hours?', 'en')}>Office Hours</button>
-            </div>
+            </div> */}
           </div>
         ) : null}
         <div class="fab" onClick={() => this.toggleChat()}>

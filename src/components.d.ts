@@ -10,6 +10,7 @@ export namespace Components {
     interface HubAibot {
         "apikey": string;
         "chatOpen": boolean;
+        "language": string;
         "model": HubAIModel;
         "personality": string;
         "welcome": string;
@@ -30,6 +31,7 @@ declare namespace LocalJSX {
     interface HubAibot {
         "apikey"?: string;
         "chatOpen"?: boolean;
+        "language"?: string;
         "model"?: HubAIModel;
         "personality"?: string;
         "welcome"?: string;

@@ -5,11 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { HubAIModel } from "./types/types";
 export namespace Components {
     interface HubAibot {
         "apikey": string;
         "chatOpen": boolean;
-        "model": string;
+        "model": HubAIModel;
         "personality": string;
         "welcome": string;
     }
@@ -29,7 +30,7 @@ declare namespace LocalJSX {
     interface HubAibot {
         "apikey"?: string;
         "chatOpen"?: boolean;
-        "model"?: string;
+        "model"?: HubAIModel;
         "personality"?: string;
         "welcome"?: string;
     }

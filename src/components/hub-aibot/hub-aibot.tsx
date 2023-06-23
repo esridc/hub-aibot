@@ -1,5 +1,7 @@
 import { Component, h, Prop, State } from '@stencil/core';
 import { setAssetPath } from "@esri/calcite-components/dist/components";
+import { HubAIModel } from '../../types/types';
+import { fetchImageChat, fetchTextChat } from '../../util/chatgpt';
 setAssetPath("./assets");
 
 @Component({
@@ -10,8 +12,9 @@ setAssetPath("./assets");
 export class HubAibot {
   private chatbotRef!: HTMLDivElement;
 
+  
   @Prop() apikey = '';
-  @Prop() model = 'text'
+  @Prop() model:HubAIModel = HubAIModel.Nearby; // 
   @Prop() personality = "You are writing for a government websites readable by 8th graders.";
   @Prop() chatOpen:boolean = false;
   @Prop() welcome:string = null;
@@ -20,6 +23,7 @@ export class HubAibot {
   @State() loading = false;
 
   models = {
+    'nearby': 'http://localui.arcgis.com:8000/chat',
     'text': 'https://api.openai.com/v1/chat/completions',
     'image': 'https://api.openai.com/v1/images/generations'
   }
@@ -29,36 +33,34 @@ export class HubAibot {
       this.messages.push(this.welcome);
     }
   }
+
+  /**
+   * Call the Hub Compass API - langchain
+   */
+  private async sendNearby(message: string) {
+    this.messages = [...this.messages, message];
+    this.loading = true;
+
+    const response = await fetch( this.models['nearby'] + '?' + new URLSearchParams({
+      query: message
+    }));
+
+    // Currently just the text directly!
+    const text:string = await response.text();
+
+    console.debug("response", {text})
+    this.messages = [...this.messages, text];
+    this.loading = false;
+  }
+
+  /**
+   * Query ChatGPT directly
+   */
   private async sendMessage(message: string, language: string = 'en') {
     this.messages = [...this.messages, message];
     this.loading = true;
 
-    const modelMap = {
-      en: "gpt-3.5-turbo",
-      es: 'curie',
-      fr: 'davinci',
-    };
-    const model = modelMap[language] || "gpt-3.5-turbo";
-
-
-    const response = await fetch( this.models['text'], {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apikey}`,
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: [
-          {"role": "system", "content": this.personality},
-          {role: "user", content: message}
-        ],
-        temperature: 0.4
-      }),
-    });
-
-    const data = await response.json();
-    const text = data.choices[0]?.message?.content;
+    const text = await fetchTextChat(message, language, this.personality, this.apikey);
 
     console.debug("response", {text})
     this.messages = [...this.messages, text];
@@ -69,19 +71,7 @@ export class HubAibot {
     this.messages = [...this.messages, message];
     this.loading = true;
 
-    const response = await fetch( this.models['image'], {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apikey}`,
-      },
-      body: JSON.stringify({
-        prompt: message,
-      }),
-    });
-
-    const data = await response.json();
-    const imageUrl = data.data[0]?.url;
+    const imageUrl = await fetchImageChat(message, this.apikey);
 
     console.debug("response", {imageUrl})
     this.messages = [...this.messages, imageUrl];
@@ -99,15 +89,18 @@ export class HubAibot {
       event.preventDefault();
       const message = this.chatbotRef.textContent?.trim() || '';
       
+      console.debug("calling model", [this.model, message])
       switch(this.model){
-        case 'text': 
+        case HubAIModel.Nearby: 
+          this.sendNearby(message);
+          break;
+        case HubAIModel.Text: 
           this.sendMessage(message);
           break;
-        case 'image':
+        case HubAIModel.Image:
           this.getImage(message);
           break;
       }
-      
       
       this.chatbotRef.textContent = '';
     }

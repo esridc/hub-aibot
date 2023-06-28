@@ -75,13 +75,12 @@
   padding: 10px;
   height: 80%;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;  
 }
-
-.message {
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #f5f5f5;
+.author-hub {
+  /* align-self: end; */
 }
 
 .loading {
@@ -113,40 +112,8 @@
   }
 }
 
-.input-container {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-top: 1px solid #e0e0e0;
-}
 
-.input {
-  flex-grow: 1;
-  padding: 6px 10px;
-  border: none;
-  outline: none;
-  resize: none;
-  font-size: 14px;
-}
 
-.send-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #0077c2;
-  color: white;
-  font-size: 20px;
-  border: none;
-  cursor: pointer;
-  margin-left: 8px;
-}
-
-.send-button:hover {
-  background-color: #005ea6;
-}
 
 .example-prompts {
   display: flex;

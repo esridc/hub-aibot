@@ -1,20 +1,16 @@
-import { Component, h, Prop, State } from '@stencil/core';
+import { Component, h, Listen, Prop, State } from '@stencil/core';
 import { setAssetPath } from "@esri/calcite-components/dist/components";
-import { HubAIModel } from '../../types/types';
+import { HubAIModel, HubChatAuthor, HubChatMessage } from '../../types/types';
 import { fetchArcGIS, fetchImageChat, fetchTextChat } from '../../util/api';
 setAssetPath("./assets");
 
-type HubAIMessage = {
-  text:string,
-  author: string
-}
+
 @Component({
   tag: 'hub-aibot',
   styleUrl: 'hub-aibot.css',
   shadow: true,
 })
 export class HubAibot {
-  private chatbotRef!: HTMLDivElement;
 
   
   @Prop() apikey = '';
@@ -24,10 +20,11 @@ export class HubAibot {
   @Prop() welcome:string = null;
 
   @Prop() language:string = 'en';
-  @State() messages: HubAIMessage[] = [];
+  @State() messages: HubChatMessage[] = [];
   @State() loading = false;
 
 
+// this.sendMessage();
   componentWillLoad() {
     if(!!this.welcome) {
       this.messages.push({
@@ -41,40 +38,32 @@ export class HubAibot {
     this.chatOpen = !this.chatOpen;
   }
 
-  async sendMessage() {
-    const message = this.chatbotRef.textContent?.trim() || '';
+  @Listen('hubChatInputEntered')
+  async sendMessage(event: CustomEvent<HubChatMessage>) {
+    const message = event.detail;
 
-    this.messages = [...this.messages, {
-      author: "AI",
-      text: message}];
+    this.messages = [...this.messages, message];
     this.loading = true;
     let text = "";
     console.debug("calling model", [this.model, message])
     switch(this.model){
       case HubAIModel.Nearby: 
-        text = await fetchArcGIS(message);
+        text = await fetchArcGIS(message.text);
         break;
       case HubAIModel.Text: 
-        text = await fetchTextChat(message, this.language, this.personality, this.apikey);
+        text = await fetchTextChat(message.text, this.language, this.personality, this.apikey);
         break;
       case HubAIModel.Image:
-        text = await fetchImageChat(message, this.apikey);
+        text = await fetchImageChat(message.text, this.apikey);
         break;
     }
 
     this.messages = [...this.messages, {
-      author: "AI",
+      author: HubChatAuthor.hub,
       text: text}];
     this.loading = false;      
-    this.chatbotRef.textContent = '';
   }
 
-  private async handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter' && event.shiftKey === false) {
-      event.preventDefault();
-      this.sendMessage();
-    }
-  }
 
   render() {
     return (
@@ -83,22 +72,18 @@ export class HubAibot {
           <div class="chat-window">
             <div class="messages">
               {this.renderIntro()}
+              {/* Placeholders for dev */}
+              <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
+              <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'welcome' }}></hub-chat-response>
+              <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
+              <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
+
               {this.messages.map((message) => (
-                <div class="message" innerHTML={message.text.replace(/(?:\r\n|\r|\n)/g, '<br>')}></div>
+                <hub-chat-response class={`message author-${message.author}`} message={message}></hub-chat-response>
               ))}
               {this.loading ? this.renderLoading() : null}
             </div>
-            <div class="input-container">
-              <div
-                class="input"
-                contentEditable={true}
-                onKeyDown={(event: KeyboardEvent) => this.handleKeyDown(event)}
-                ref={(el) => (this.chatbotRef = el!)}
-              ></div>
-              <button class="send-button" onClick={() => this.sendMessage()}>
-              <calcite-icon icon="send" text-label="Send message"></calcite-icon>
-              </button>
-            </div>
+            <hub-chat-input></hub-chat-input>
             {/* <div class="example-prompts">
               <button onClick={() => this.sendMessage('Tell me about your services.', 'en')}>Services</button>
               <button onClick={() => this.sendMessage('What are your office hours?', 'en')}>Office Hours</button>
@@ -123,9 +108,9 @@ export class HubAibot {
   }
 
   private renderIntro() {
-    return <div class="intro">
-      <p>Welcome to the Hub Compass Chatbot!</p>
-      <p>How can I assist you today?</p>
-    </div>;
+    return [
+      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'Welcome to the Hub Compass Chatbot!' }}></hub-chat-response>,
+      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'How can I assist you today?' }}></hub-chat-response>
+    ]
   }
 }

@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { HubAIModel } from "./types/types";
+import { HubAIModel, HubChatMessage } from "./types/types";
 export namespace Components {
     interface HubAibot {
         "apikey": string;
@@ -15,6 +15,19 @@ export namespace Components {
         "personality": string;
         "welcome": string;
     }
+    interface HubChatAction {
+    }
+    interface HubChatFab {
+    }
+    interface HubChatInput {
+    }
+    interface HubChatResponse {
+        "message": HubChatMessage;
+    }
+}
+export interface HubChatInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHubChatInputElement;
 }
 declare global {
     interface HTMLHubAibotElement extends Components.HubAibot, HTMLStencilElement {
@@ -23,8 +36,36 @@ declare global {
         prototype: HTMLHubAibotElement;
         new (): HTMLHubAibotElement;
     };
+    interface HTMLHubChatActionElement extends Components.HubChatAction, HTMLStencilElement {
+    }
+    var HTMLHubChatActionElement: {
+        prototype: HTMLHubChatActionElement;
+        new (): HTMLHubChatActionElement;
+    };
+    interface HTMLHubChatFabElement extends Components.HubChatFab, HTMLStencilElement {
+    }
+    var HTMLHubChatFabElement: {
+        prototype: HTMLHubChatFabElement;
+        new (): HTMLHubChatFabElement;
+    };
+    interface HTMLHubChatInputElement extends Components.HubChatInput, HTMLStencilElement {
+    }
+    var HTMLHubChatInputElement: {
+        prototype: HTMLHubChatInputElement;
+        new (): HTMLHubChatInputElement;
+    };
+    interface HTMLHubChatResponseElement extends Components.HubChatResponse, HTMLStencilElement {
+    }
+    var HTMLHubChatResponseElement: {
+        prototype: HTMLHubChatResponseElement;
+        new (): HTMLHubChatResponseElement;
+    };
     interface HTMLElementTagNameMap {
         "hub-aibot": HTMLHubAibotElement;
+        "hub-chat-action": HTMLHubChatActionElement;
+        "hub-chat-fab": HTMLHubChatFabElement;
+        "hub-chat-input": HTMLHubChatInputElement;
+        "hub-chat-response": HTMLHubChatResponseElement;
     }
 }
 declare namespace LocalJSX {
@@ -36,8 +77,22 @@ declare namespace LocalJSX {
         "personality"?: string;
         "welcome"?: string;
     }
+    interface HubChatAction {
+    }
+    interface HubChatFab {
+    }
+    interface HubChatInput {
+        "onHubChatInputEntered"?: (event: HubChatInputCustomEvent<HubChatMessage>) => void;
+    }
+    interface HubChatResponse {
+        "message"?: HubChatMessage;
+    }
     interface IntrinsicElements {
         "hub-aibot": HubAibot;
+        "hub-chat-action": HubChatAction;
+        "hub-chat-fab": HubChatFab;
+        "hub-chat-input": HubChatInput;
+        "hub-chat-response": HubChatResponse;
     }
 }
 export { LocalJSX as JSX };
@@ -45,6 +100,10 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "hub-aibot": LocalJSX.HubAibot & JSXBase.HTMLAttributes<HTMLHubAibotElement>;
+            "hub-chat-action": LocalJSX.HubChatAction & JSXBase.HTMLAttributes<HTMLHubChatActionElement>;
+            "hub-chat-fab": LocalJSX.HubChatFab & JSXBase.HTMLAttributes<HTMLHubChatFabElement>;
+            "hub-chat-input": LocalJSX.HubChatInput & JSXBase.HTMLAttributes<HTMLHubChatInputElement>;
+            "hub-chat-response": LocalJSX.HubChatResponse & JSXBase.HTMLAttributes<HTMLHubChatResponseElement>;
         }
     }
 }

@@ -9,12 +9,21 @@
   <script type="module" src="./build/hub-aibot.esm.js"></script>
   <script nomodule src="./build/hub-aibot.js"></script>
 
+  <script
+  type="module"
+  src="https://esri.github.io/hub-components/harnesses/build/hub-components.esm.js"
+></script>    
 </head>
 
 <body>
   <!-- Delayed render so we can get the API key from URL parameters -->
   <div id="placeholder"></div>
 
+  <arcgis-hub-identity
+    id="identity"
+    client="2kAcJaj7GkBYg2Wp"
+    portal="https://dc.mapsqa.arcgis.com"   
+  ></arcgis-hub-identity>
   <style>
     body {
       font-family: sans-serif;
@@ -25,15 +34,20 @@
 
   <script>
     const urlParams = new URL(window.location).searchParams;
+    const identityEl = document.getElementById("placeholder");
 
-    const placeholderEl = document.getElementById("placeholder");
-    const botEl = document.createElement("hub-aibot");
-    botEl.apikey = urlParams.get('key');
-    botEl.model = urlParams.get('model') || 'nearby';
-    botEl.chatOpen = true;
+    document.addEventListener('arcgisAppIdentitySignedIn', () => {
+      const placeholderEl = document.getElementById("placeholder");
+      const botEl = document.createElement("hub-aibot");
+      botEl.modelUrl = "http://localui.arcgis.com:8000/chat"
+      botEl.apikey = urlParams.get('key');
+      botEl.model = urlParams.get('model') || 'nearby';
+      botEl.chatOpen = true;
+      
+      placeholderEl.appendChild(botEl);
+      console.debug("botEl", { botEl, key: botEl.apikey })
+    })
     
-    placeholderEl.appendChild(botEl);
-    console.debug("botEl", { botEl, key: botEl.apikey })
   </script>
 </body>
 

@@ -8,27 +8,26 @@ import { Component, Host, Prop, h } from '@stencil/core';
 export class HubChatAction {
 
   @Prop() actionTitle:string = "";
-  @Prop() actionLink:string = "#";
+  @Prop() actionLink:Function;
 
-  actionEl: HTMLAnchorElement;
+  actionEl: HTMLDivElement;
 
   actionClicked() {
     console.debug("Action clicked");
     this.actionEl.classList.toggle("selected");
+    this.actionLink.call(this);
   }
   render() {
     return (
       <Host>
-        <a 
-            href={this.actionLink}
-            target="_new"
+        <div
             ref={el => this.actionEl = el} 
             onClick={_ev => this.actionClicked.call(this)} 
             class="action"
           >
           <slot></slot>
           {this.actionTitle}
-        </a>
+        </div>
       </Host>
     );
   }

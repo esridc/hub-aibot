@@ -1,9 +1,11 @@
 import { Component, h, Listen, Prop, State } from '@stencil/core';
 import { setAssetPath } from "@esri/calcite-components/dist/components";
 import { HubAIModel, HubChatAuthor, HubChatMessage } from '../../types/types';
-import { fetchArcGIS, fetchImageChat, fetchTextChat } from '../../util/api';
-setAssetPath("./assets");
+import { fetchArcGIS, fetchImageChat, fetchTextChat, setModelUrl } from '../../util/api';
+import { addChatHistory, getChatHistory } from '../../util/discussions';
+import { IChannel } from '@esri/hub-discussions';
 
+setAssetPath("./assets");
 
 @Component({
   tag: 'hub-aibot',
@@ -14,6 +16,7 @@ export class HubAibot {
 
   
   @Prop() apikey = '';
+  @Prop() modelUrl:string = null;
   @Prop() model:HubAIModel = HubAIModel.Nearby; // 
   @Prop() personality = "You are writing for a government websites readable by 8th graders.";
   @Prop() chatOpen:boolean = false;
@@ -22,18 +25,42 @@ export class HubAibot {
   @Prop() language:string = 'en';
   @State() messages: HubChatMessage[] = [];
   @State() loading = false;
-
+  @State() chatHistory: IChannel = null
 
 // this.sendMessage();
-  componentWillLoad() {
+  async componentWillLoad() {
+
+    if(!!this.modelUrl) {
+      setModelUrl(this.model, this.modelUrl);
+    }
+
     if(!!this.welcome) {
       this.messages.push({
         author: "AI",
         text: this.welcome       
       });
     }
+    
+    await this.loadHistory();
+
   }
 
+  // We need to load user context first
+  // @Listen('signInCompleted')
+  async loadHistory() {
+    
+    const posts = await getChatHistory();
+
+    console.debug("User signed in, getting chat history", {posts})
+
+    posts.map((post) => {
+      this.messages.push({
+        author: "user",
+        text: post.body
+      })
+    })
+  }
+  
   private toggleChat() {
     this.chatOpen = !this.chatOpen;
   }
@@ -41,6 +68,10 @@ export class HubAibot {
   @Listen('hubChatInputEntered')
   async sendMessage(event: CustomEvent<HubChatMessage>) {
     const message = event.detail;
+
+    const post = addChatHistory(message.text);
+
+    console.debug("added to chat history", {message, post})
 
     this.messages = [...this.messages, message];
     this.loading = true;
@@ -57,6 +88,9 @@ export class HubAibot {
         text = await fetchImageChat(message.text, this.apikey);
         break;
     }
+    
+    const aiPost = addChatHistory(`AI: ${message.text}`);
+    console.debug("added to chat history", {message, aiPost})
 
     this.messages = [...this.messages, {
       author: HubChatAuthor.hub,
@@ -64,7 +98,15 @@ export class HubAibot {
     this.loading = false;      
   }
 
-
+  async viewChat() {
+    console.debug("viewChat")
+    // this.chatHistory = await getChatHistory();
+  }
+  async setupChat() {
+    console.debug("setupChat");
+    // const channel = await createChatHistory();
+    // console.log("channel", channel);
+  }
   render() {
     return (
       <div>
@@ -73,12 +115,8 @@ export class HubAibot {
             <div class="messages">
               {this.renderIntro()}
               {/* Placeholders for dev */}
-              <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
-              <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'welcome' }}></hub-chat-response>
-              <hub-chat-action actionLink="https://hub.arcgis.com">Search Near Me</hub-chat-action>
-              <hub-chat-action>Enter your Address</hub-chat-action>
-              <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
-              <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
+              {/* <hub-chat-action actionLink={() => this.viewChat()}>Get Chat History</hub-chat-action>
+              <hub-chat-action actionLink={() => this.setupChat()}>Create Chat History</hub-chat-action> */}
 
               {this.messages.map((message) => (
                 <hub-chat-response class={`message author-${message.author}`} message={message}></hub-chat-response>

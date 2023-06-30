@@ -5,6 +5,14 @@ const AIModels = {
   'image': 'https://api.openai.com/v1/images/generations'
 }
 
+/**
+ * Optionally set a new ArcgiS service url
+ * @param url 
+ */
+export function setModelUrl(model: string, url:string) {
+  AIModels[model] = url;
+}
+
 /** 
  * Esri LLM 
  * */

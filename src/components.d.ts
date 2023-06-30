@@ -7,16 +7,22 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { HubAIModel, HubChatMessage } from "./types/types";
 export namespace Components {
+    interface ArcgisHubIdentity {
+        "client": string;
+        "portal": string;
+        "redirect": string;
+    }
     interface HubAibot {
         "apikey": string;
         "chatOpen": boolean;
         "language": string;
         "model": HubAIModel;
+        "modelUrl": string;
         "personality": string;
         "welcome": string;
     }
     interface HubChatAction {
-        "actionLink": string;
+        "actionLink": Function;
         "actionTitle": string;
     }
     interface HubChatFab {
@@ -32,6 +38,12 @@ export interface HubChatInputCustomEvent<T> extends CustomEvent<T> {
     target: HTMLHubChatInputElement;
 }
 declare global {
+    interface HTMLArcgisHubIdentityElement extends Components.ArcgisHubIdentity, HTMLStencilElement {
+    }
+    var HTMLArcgisHubIdentityElement: {
+        prototype: HTMLArcgisHubIdentityElement;
+        new (): HTMLArcgisHubIdentityElement;
+    };
     interface HTMLHubAibotElement extends Components.HubAibot, HTMLStencilElement {
     }
     var HTMLHubAibotElement: {
@@ -63,6 +75,7 @@ declare global {
         new (): HTMLHubChatResponseElement;
     };
     interface HTMLElementTagNameMap {
+        "arcgis-hub-identity": HTMLArcgisHubIdentityElement;
         "hub-aibot": HTMLHubAibotElement;
         "hub-chat-action": HTMLHubChatActionElement;
         "hub-chat-fab": HTMLHubChatFabElement;
@@ -71,16 +84,22 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface ArcgisHubIdentity {
+        "client"?: string;
+        "portal"?: string;
+        "redirect"?: string;
+    }
     interface HubAibot {
         "apikey"?: string;
         "chatOpen"?: boolean;
         "language"?: string;
         "model"?: HubAIModel;
+        "modelUrl"?: string;
         "personality"?: string;
         "welcome"?: string;
     }
     interface HubChatAction {
-        "actionLink"?: string;
+        "actionLink"?: Function;
         "actionTitle"?: string;
     }
     interface HubChatFab {
@@ -92,6 +111,7 @@ declare namespace LocalJSX {
         "message"?: HubChatMessage;
     }
     interface IntrinsicElements {
+        "arcgis-hub-identity": ArcgisHubIdentity;
         "hub-aibot": HubAibot;
         "hub-chat-action": HubChatAction;
         "hub-chat-fab": HubChatFab;
@@ -103,6 +123,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "arcgis-hub-identity": LocalJSX.ArcgisHubIdentity & JSXBase.HTMLAttributes<HTMLArcgisHubIdentityElement>;
             "hub-aibot": LocalJSX.HubAibot & JSXBase.HTMLAttributes<HTMLHubAibotElement>;
             "hub-chat-action": LocalJSX.HubChatAction & JSXBase.HTMLAttributes<HTMLHubChatActionElement>;
             "hub-chat-fab": LocalJSX.HubChatFab & JSXBase.HTMLAttributes<HTMLHubChatFabElement>;

@@ -21,9 +21,9 @@
 }
 
 .author-hub {
-  justify-content: end;
+  justify-content: start;
   grid-template-areas: 
-  "text avatar";
+  "avatar text";
 }
 .author-hub .avatar {
   background-color: blueviolet;  
@@ -31,20 +31,21 @@
 }
 .author-hub .text {
   border: 2px solid #EEE;
-  border-radius: 15px 0px 15px 15px;
+  border-radius: 15px 15px 15px 0px;
 }
 
 .author-user {
-  justify-content: start;
+  justify-content: end;
   grid-template-areas: 
-  "avatar text";
+  " text avatar";
 }
 .author-user .avatar {
   background-color: cornsilk;
   border-radius: 25px;
+  display: none;
 }
 .author-user .text {
   background-color:dodgerblue;
   color: white;
-  border-radius: 0px 15px 15px 15px;
+  border-radius: 15px 15px 0px 15px;
 }

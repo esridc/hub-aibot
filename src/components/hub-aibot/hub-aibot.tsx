@@ -75,6 +75,8 @@ export class HubAibot {
               {/* Placeholders for dev */}
               <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
               <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'welcome' }}></hub-chat-response>
+              <hub-chat-action actionLink="https://hub.arcgis.com">Search Near Me</hub-chat-action>
+              <hub-chat-action>Enter your Address</hub-chat-action>
               <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
               <hub-chat-response class={`message author-user`} message={{author: 'user', text:'thank you!' }}></hub-chat-response>
 

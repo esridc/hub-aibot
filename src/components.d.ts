@@ -16,6 +16,8 @@ export namespace Components {
         "welcome": string;
     }
     interface HubChatAction {
+        "actionLink": string;
+        "actionTitle": string;
     }
     interface HubChatFab {
     }
@@ -78,6 +80,8 @@ declare namespace LocalJSX {
         "welcome"?: string;
     }
     interface HubChatAction {
+        "actionLink"?: string;
+        "actionTitle"?: string;
     }
     interface HubChatFab {
     }

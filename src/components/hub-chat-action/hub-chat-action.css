@@ -1,3 +1,20 @@
 :host {
   display: block;
 }
+.action {
+  display: block;
+  border: 1px solid blueviolet;
+  text-align: center;
+  padding: 0.5rem 0;
+  margin: 0;
+  cursor: pointer;
+  text-decoration: none;  
+}
+.action:hover {  
+  background-color: blueviolet;
+  color: white;
+}
+.action.selected {
+  background-color: blue;
+  color: white;
+}

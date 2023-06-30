@@ -30,6 +30,7 @@
     const botEl = document.createElement("hub-aibot");
     botEl.apikey = urlParams.get('key');
     botEl.model = urlParams.get('model') || 'nearby';
+    botEl.chatOpen = true;
     
     placeholderEl.appendChild(botEl);
     console.debug("botEl", { botEl, key: botEl.apikey })

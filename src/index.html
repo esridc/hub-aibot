@@ -8,6 +8,9 @@
 
   <script type="module" src="./build/hub-aibot.esm.js"></script>
   <script nomodule src="./build/hub-aibot.js"></script>
+  <script type="module" src="https://js.arcgis.com/calcite-components/1.4.3/calcite.esm.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.3/calcite.css" />
+  
 
   <script
   type="module"
@@ -30,22 +33,64 @@
       margin: 0;
       padding: 0;
     }
-  </style>
 
+    .content {
+      height: 80vh;
+    }
+  </style>
+  
+
+<!--         
+    <script>
+      const shellPanelStart = document.getElementById("shell-panel-start");
+      const shellPanelEnd = document.getElementById("shell-panel-end");
+      const panelStart = document.getElementById("panel-start");
+      const panelEnd = document.getElementById("panel-end");
+  
+      const actionsStart = shellPanelStart?.querySelectorAll("calcite-action");
+      const actionsEnd = shellPanelEnd?.querySelectorAll("calcite-action");
+  
+      actionsStart?.forEach(el => {
+          el.addEventListener("click", function(event) {
+              actionsStart?.forEach(action => (action.active = false));
+              el.active = panelStart.closed;
+              shellPanelStart.collapsed = !shellPanelStart.collapsed;
+              panelStart.closed = !panelStart.closed;
+          });
+      });
+  
+      panelEnd?.addEventListener("calcitePanelClose", function(event) {
+          actionsEnd.forEach(action => (action.active = false));
+          shellPanelEnd.collapsed = true;
+      });
+  
+      actionsEnd?.forEach(el => {
+          el.addEventListener("click", function(event) {
+              actionsEnd?.forEach(action => (action.active = false));
+              el.active = panelEnd.closed;
+              shellPanelEnd.collapsed = !shellPanelEnd.collapsed;
+              panelEnd.closed = !panelEnd.closed;
+          });
+      });
+  </script> -->
   <script>
     const urlParams = new URL(window.location).searchParams;
     const identityEl = document.getElementById("placeholder");
+    let botEl = null;
 
     document.addEventListener('arcgisAppIdentitySignedIn', () => {
-      const placeholderEl = document.getElementById("placeholder");
-      const botEl = document.createElement("hub-aibot");
-      botEl.modelUrl = "http://localui.arcgis.com:8000/chat"
-      botEl.apikey = urlParams.get('key');
-      botEl.model = urlParams.get('model') || 'nearby';
-      botEl.chatOpen = true;
-      
-      placeholderEl.appendChild(botEl);
-      console.debug("botEl", { botEl, key: botEl.apikey })
+      if(!botEl) {
+        const placeholderEl = document.getElementById("placeholder");
+        botEl = document.createElement("hub-aibot");
+        botEl.modelUrl = "http://localui.arcgis.com:8000/chat"
+        botEl.apikey = urlParams.get('key');
+        botEl.model = urlParams.get('model') || 'nearby';
+        botEl.layout = "modal";
+        botEl.chatOpen = true;
+        
+        placeholderEl.appendChild(botEl);
+        console.debug("botEl", { botEl, key: botEl.apikey })
+      }
     })
     
   </script>

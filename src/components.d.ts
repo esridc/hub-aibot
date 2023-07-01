@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { HubAIModel, HubChatMessage } from "./types/types";
+import { ChatbotLayout, HubAIModel, HubChatMessage } from "./types/types";
 export namespace Components {
     interface ArcgisHubIdentity {
         "client": string;
@@ -16,6 +16,10 @@ export namespace Components {
         "apikey": string;
         "chatOpen": boolean;
         "language": string;
+        /**
+          * Option for Chatbot to be a FAB popup, or a full screen window
+         */
+        "layout": ChatbotLayout;
         "model": HubAIModel;
         "modelUrl": string;
         "personality": string;
@@ -93,6 +97,10 @@ declare namespace LocalJSX {
         "apikey"?: string;
         "chatOpen"?: boolean;
         "language"?: string;
+        /**
+          * Option for Chatbot to be a FAB popup, or a full screen window
+         */
+        "layout"?: ChatbotLayout;
         "model"?: HubAIModel;
         "modelUrl"?: string;
         "personality"?: string;

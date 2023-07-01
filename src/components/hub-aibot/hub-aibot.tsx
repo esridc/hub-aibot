@@ -1,11 +1,13 @@
 import { Component, h, Listen, Prop, State } from '@stencil/core';
 import { setAssetPath } from "@esri/calcite-components/dist/components";
-import { HubAIModel, HubChatAuthor, HubChatMessage } from '../../types/types';
+import { ChatbotLayout, HubAIModel, HubChatAuthor, HubChatMessage } from '../../types/types';
 import { fetchArcGIS, fetchImageChat, fetchTextChat, setModelUrl } from '../../util/api';
 import { addChatHistory, getChatHistory } from '../../util/discussions';
 import { IChannel } from '@esri/hub-discussions';
 
-setAssetPath("./assets");
+// setAssetPath("./assets");
+setAssetPath("https://js.arcgis.com/calcite-components/1.4.3/assets");
+
 
 @Component({
   tag: 'hub-aibot',
@@ -21,6 +23,11 @@ export class HubAibot {
   @Prop() personality = "You are writing for a government websites readable by 8th graders.";
   @Prop() chatOpen:boolean = false;
   @Prop() welcome:string = null;
+
+  /**
+   * Option for Chatbot to be a FAB popup, or a full screen window
+   */
+  @Prop() layout:ChatbotLayout = ChatbotLayout.Modal;
 
   @Prop() language:string = 'en';
   @State() messages: HubChatMessage[] = [];
@@ -40,7 +47,7 @@ export class HubAibot {
         text: this.welcome       
       });
     }
-    
+
     await this.loadHistory();
 
   }
@@ -110,32 +117,93 @@ export class HubAibot {
   render() {
     return (
       <div>
-        {this.chatOpen ? (
-          <div class="chat-window">
-            <div class="messages">
-              {this.renderIntro()}
-              {/* Placeholders for dev */}
-              {/* <hub-chat-action actionLink={() => this.viewChat()}>Get Chat History</hub-chat-action>
-              <hub-chat-action actionLink={() => this.setupChat()}>Create Chat History</hub-chat-action> */}
-
-              {this.messages.map((message) => (
-                <hub-chat-response class={`message author-${message.author}`} message={message}></hub-chat-response>
-              ))}
-              {this.loading ? this.renderLoading() : null}
-            </div>
-            <hub-chat-input></hub-chat-input>
-            {/* <div class="example-prompts">
-              <button onClick={() => this.sendMessage('Tell me about your services.', 'en')}>Services</button>
-              <button onClick={() => this.sendMessage('What are your office hours?', 'en')}>Office Hours</button>
-            </div> */}
-          </div>
-        ) : null}
-        <div class="fab" onClick={() => this.toggleChat()}>
-          <span class="tooltip">Open Hub Compass</span>
-          <calcite-icon class="fab-icon" icon="explore" text-label="Open Hub Compass"></calcite-icon>
-        </div>
+        {this.renderChatBody(this.chatOpen)}
+        {this.renderChatFAB()}
       </div>
     );
+  }
+
+  private renderChatFAB() {
+    return <div class="fab" onClick={() => this.toggleChat()}>
+      <span class="tooltip">Open Hub Compass</span>
+      <calcite-icon class="fab-icon" icon="explore" text-label="Open Hub Compass"></calcite-icon>
+    </div>;
+  }
+
+  private renderChatBody(open: boolean = false) {
+    const content = [];
+    content.push(<div class={`chat-window ${this.layout}`}>
+      <div class="messages">
+        {this.renderIntro()}
+        {/* Placeholders for dev */}
+        {/* <hub-chat-action actionLink={() => this.viewChat()}>Get Chat History</hub-chat-action>
+        <hub-chat-action actionLink={() => this.setupChat()}>Create Chat History</hub-chat-action> */}
+
+        {this.messages.map((message) => (
+          <hub-chat-response class={`message author-${message.author}`} message={message}></hub-chat-response>
+        ))}
+        {this.loading ? this.renderLoading() : null}
+      </div>
+      <hub-chat-input class="chat-input"></hub-chat-input>
+      {/* <div class="example-prompts">
+          <button onClick={() => this.sendMessage('Tell me about your services.', 'en')}>Services</button>
+          <button onClick={() => this.sendMessage('What are your office hours?', 'en')}>Office Hours</button>
+        </div> */}
+    </div>);
+
+    if(this.layout === ChatbotLayout.Modal) {
+      return (<calcite-modal open={open} aria-labelledby="modal-title" id="example-modal">
+        <div slot="header" id="modal-title">
+            AI Chat
+        </div>
+        <div class="content" slot="content">
+          {this.renderShell(content)}
+        </div>
+      </calcite-modal>)
+    } else if (open) {
+        return content;
+    }
+    return null;
+  }
+
+  private renderShell(content) {
+    return (
+      <calcite-shell>
+      <calcite-shell-panel slot="panel-start" position="start" id="shell-panel-start">
+          <calcite-action-bar slot="action-bar">
+              <calcite-action active text="Chats" icon="speech-bubble" indicator></calcite-action>
+              <calcite-action icon="configure" text="Configure"></calcite-action>
+          </calcite-action-bar>
+          <calcite-panel heading="Previous Chats" id="panel-start">
+            {this.renderHistorySelect("Today", true)}
+            {this.renderHistorySelect("June 25, 2023")}
+          </calcite-panel>
+      </calcite-shell-panel>
+      {/* <calcite-shell-panel slot="panel-end" position="end" id="shell-panel-end" collapsed>
+          <calcite-action-bar slot="action-bar">
+              <calcite-action text="Layer properties" icon="sliders-horizontal"></calcite-action>
+              <calcite-action text="Styles" icon="shapes"></calcite-action>
+              <calcite-action text="Filter" icon="layer-filter"></calcite-action>
+              <calcite-action text="Configure pop-ups" icon="popup"></calcite-action>
+          </calcite-action-bar>
+          <calcite-panel heading="Panel 2" id="panel-end" closable closed>
+              <calcite-block heading="Block 1" collapsible></calcite-block>
+          </calcite-panel>
+      </calcite-shell-panel> */}
+      <calcite-panel heading="Active Chat">
+        {content}
+      </calcite-panel>
+  </calcite-shell>
+    );
+  }
+  private renderHistorySelect(heading:string = "", active:boolean = false) {
+    return <calcite-block heading={heading}>
+      <calcite-icon scale="s" slot="icon" icon={active ? "check-circle" : ""}></calcite-icon>
+
+      <div slot="header-menu-actions">
+        <calcite-action text="Delete this Chat" icon="x" text-enabled></calcite-action>
+      </div>
+    </calcite-block>;
   }
 
   private renderLoading() {

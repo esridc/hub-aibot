@@ -1,4 +1,9 @@
 
+export enum ChatbotLayout {
+    Popup = "popup",
+    Modal = "modal"
+}
+
 export enum HubAIModel {
     Nearby = 'nearby',
     Text = 'text',

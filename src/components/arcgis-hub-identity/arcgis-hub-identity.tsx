@@ -24,7 +24,7 @@ export class ArcgisHubIdentity {
     /**
      * reference to sign-in button for onclick events
      */
-    signinButton:HTMLButtonElement;
+    signinButton:HTMLCalciteButtonElement;
   
     signinClick() {
       const evt = new CustomEvent('arcgisAppIdentityStartSignIn');
@@ -81,7 +81,7 @@ export class ArcgisHubIdentity {
         return (
           <calcite-button
             ref={el => this.signinButton = el}
-            onclick={this.signinClick}
+            onClick={this.signinClick}
           >
             Sign In
           </calcite-button>

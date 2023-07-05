@@ -34,6 +34,7 @@ export class HubAibot {
   @State() loading = false;
   @State() chatHistory: IChannel = null
 
+
 // this.sendMessage();
   async componentWillLoad() {
 
@@ -122,12 +123,22 @@ export class HubAibot {
   render() {
     return (
       <div>
-        {this.renderChatBody(this.chatOpen)}
+        {this.renderChatWindow(this.chatOpen)}
         {this.renderChatFAB()}
       </div>
     );
   }
 
+  scrollToLastMessage() {
+    this.messagesEl.scrollTo({ top: this.messagesEl.scrollHeight, behavior: 'smooth' });    
+  }
+  componentDidRender() {
+    this.scrollToLastMessage();
+  }
+  componentDidUpdate() {
+    this.scrollToLastMessage();
+  }
+  
   private renderChatFAB() {
     return <div class="fab" onClick={() => this.toggleChat()}>
       <span class="tooltip">Open Hub Compass</span>
@@ -135,42 +146,43 @@ export class HubAibot {
     </div>;
   }
 
-  private renderChatBody(open: boolean = false) {
-    const content = [];
-    content.push(<div class={`chat-window ${this.layout}`}>
-      <div class="messages">
+  private renderChatWindow(open: boolean = false) {
+    const content = this.renderChatBody();
+    
+    if(this.layout === ChatbotLayout.Modal) {
+      return (this.renderChatModal(open, content))
+    } else if (open) {
+        return content;
+    }
+    return null;
+  }
+
+  messagesEl: HTMLDivElement;
+  private renderChatBody(): any {
+    return <div class={`chat-window ${this.layout}`}>
+      <div class="messages" ref={(el) => this.messagesEl = el}>
         {this.renderIntro()}
-        {/* Placeholders for dev */}
-        {/* <hub-chat-action actionLink={() => this.viewChat()}>Get Chat History</hub-chat-action>
-        <hub-chat-action actionLink={() => this.setupChat()}>Create Chat History</hub-chat-action> */}
 
         {this.messages.map((message) => (
-          <hub-chat-response 
-            class={`message author-${message.author}`} 
+          <hub-chat-response
+            class={`message author-${message.author}`}
             message={message}></hub-chat-response>
         ))}
         {this.loading ? this.renderLoading() : null}
       </div>
       <hub-chat-input class="chat-input"></hub-chat-input>
-      {/* <div class="example-prompts">
-          <button onClick={() => this.sendMessage('Tell me about your services.', 'en')}>Services</button>
-          <button onClick={() => this.sendMessage('What are your office hours?', 'en')}>Office Hours</button>
-        </div> */}
-    </div>);
+    </div>;
+  }
 
-    if(this.layout === ChatbotLayout.Modal) {
-      return (<calcite-modal open={open} aria-labelledby="modal-title" id="example-modal">
-        <div slot="header" id="modal-title">
-            AI Chat
-        </div>
-        <div class="content" slot="content">
-          {this.renderShell(content)}
-        </div>
-      </calcite-modal>)
-    } else if (open) {
-        return content;
-    }
-    return null;
+  private renderChatModal(open: boolean, content: any[]) {
+    return <calcite-modal open={open} aria-labelledby="modal-title" id="example-modal">
+      <div slot="header" id="modal-title">
+        AI Chat
+      </div>
+      <div class="content" slot="content">
+        {this.renderShell(content)}
+      </div>
+    </calcite-modal>;
   }
 
   private renderShell(content) {
@@ -186,17 +198,7 @@ export class HubAibot {
             {this.renderHistorySelect("June 25, 2023")}
           </calcite-panel>
       </calcite-shell-panel>
-      {/* <calcite-shell-panel slot="panel-end" position="end" id="shell-panel-end" collapsed>
-          <calcite-action-bar slot="action-bar">
-              <calcite-action text="Layer properties" icon="sliders-horizontal"></calcite-action>
-              <calcite-action text="Styles" icon="shapes"></calcite-action>
-              <calcite-action text="Filter" icon="layer-filter"></calcite-action>
-              <calcite-action text="Configure pop-ups" icon="popup"></calcite-action>
-          </calcite-action-bar>
-          <calcite-panel heading="Panel 2" id="panel-end" closable closed>
-              <calcite-block heading="Block 1" collapsible></calcite-block>
-          </calcite-panel>
-      </calcite-shell-panel> */}
+
       <calcite-panel heading="Active Chat">
         {content}
       </calcite-panel>
@@ -241,11 +243,13 @@ export class HubAibot {
     return <calcite-block heading={heading}>
       <calcite-icon scale="s" slot="icon" icon={active ? "check-circle" : ""}></calcite-icon>
 
-      <div slot="header-menu-actions">
-        <calcite-action text="Delete this Chat" icon="x" text-enabled></calcite-action>
-      </div>
+      {this.renderFeedback}
     </calcite-block>;
   }
+  private readonly renderFeedback = <div slot="header-menu-actions">
+    <calcite-action text="Delete this Chat" icon="x" text-enabled></calcite-action>
+  </div>;
+
 
   private renderLoading() {
     return (
@@ -256,10 +260,13 @@ export class HubAibot {
       </div>);
   }
 
+  private readonly renderMap = `<hub-chat-map></hub-chat-map>`;
+
   private renderIntro() {
     return [
       <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'Welcome to the Hub Compass Chatbot!' }} allowFeedback={false}></hub-chat-response>,
-      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'How can I assist you today?' }} allowFeedback={false}></hub-chat-response>
+      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'How can I assist you today?' }} allowFeedback={false}></hub-chat-response>,
+      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:`Here is where we are. ${this.renderMap}` }} allowFeedback={false}></hub-chat-response>
     ]
   }
 }

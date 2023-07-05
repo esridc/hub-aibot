@@ -28,7 +28,10 @@ export class HubChatResponse {
   }
 
   cleanMessageText(text): string {
-    return text.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    console.debug("Response", text)
+    let output = text.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>');
+
+    return output;
   }
 
   async removeResponse() {
@@ -54,9 +57,9 @@ export class HubChatResponse {
           ></div>
           <div 
             class="text"
-            
+            innerHTML={this.cleanMessageText(this.message?.text)}
           >
-            {this.cleanMessageText(this.message?.text)}
+            
           </div>
           
           {this.message.postId ? 
@@ -70,8 +73,9 @@ export class HubChatResponse {
   }
 
 
-  addFeedback(reaction: PostReaction) {
-    addResponseFeedback(this.message?.postId, reaction)
+  addFeedback(postId:string, reaction: PostReaction) {
+    console.debug("Response: addFeedback", {postId})
+    addResponseFeedback(postId, reaction)
   }
 
   private renderFeedback() {
@@ -82,8 +86,8 @@ export class HubChatResponse {
         {/* <calcite-notice open>
             <div slot="warning">Use layer effects sparingly, for emphasis</div>
         </calcite-notice> */}
-        <calcite-action onClick={this.addFeedback.call(this, PostReaction.THUMBS_UP)} slot="control" text="Good Response" icon="thumbs-up"></calcite-action>
-        <calcite-action onClick={this.addFeedback.call(this, PostReaction.THUMBS_DOWN)} slot="control" text="Bad Response" icon="thumbs-down"></calcite-action>
+        <calcite-action onClick={() => this.addFeedback(this.message?.postId, PostReaction.THUMBS_UP)} slot="control" text="Good Response" icon="thumbs-up"></calcite-action>
+        <calcite-action onClick={() => this.addFeedback(this.message?.postId, PostReaction.THUMBS_DOWN)} slot="control" text="Bad Response" icon="thumbs-down"></calcite-action>
         {/* <div slot="header-menu-actions">
             <calcite-action text="Information" icon="information" text-enabled></calcite-action>
         </div> */}

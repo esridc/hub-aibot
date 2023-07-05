@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+#map {
+  width: 100%;
+  min-width: 300px;
+  height: 200px;
+  background-color: lightblue;
+  color: black;
+
+  text-align: center;
+}

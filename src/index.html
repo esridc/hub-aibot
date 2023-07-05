@@ -22,12 +22,7 @@
   <!-- Delayed render so we can get the API key from URL parameters -->
   <div id="placeholder"></div>
 
-  <arcgis-hub-identity
-    id="identity"
-    client="2kAcJaj7GkBYg2Wp"
-    portal="https://dc.mapsqa.arcgis.com" 
-    redirect="http://localui.arcgis.com:3333/redirect.html"  
-  ></arcgis-hub-identity>
+  </div>
   <style>
     body {
       font-family: sans-serif;
@@ -42,12 +37,19 @@
 
   <script>
     const urlParams = new URL(window.location).searchParams;
-    const identityEl = document.getElementById("placeholder");
+    const placeholderEl = document.getElementById("placeholder");
     let botEl = null;
+
+    // Identity management
+    const identityEl = document.createElement("arcgis-hub-identity");
+    identityEl.portal = "https://dc.mapsqa.arcgis.com"
+    identityEl.client = "2kAcJaj7GkBYg2Wp";
+    identityEl.id = "identity";
+    identityEl.redirect = `${window.location}redirect.html`
+    placeholderEl.appendChild(identityEl);
 
     document.addEventListener('arcgisAppIdentitySignedIn', () => {
       if(!botEl) {
-        const placeholderEl = document.getElementById("placeholder");
         botEl = document.createElement("hub-aibot");
         botEl.modelUrl = "http://localui.arcgis.com:8000/chat"
         botEl.apikey = urlParams.get('key');

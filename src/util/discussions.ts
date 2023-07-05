@@ -88,7 +88,7 @@ export async function getChatHistory(): Promise<IPost[]> {
   chatHistoryChannel = await getChatChannel();
   const posts = await searchPosts({
     data: {
-      // num: 1,
+      num: 100,
       channels: [chatHistoryChannel.id],
       // access: [SharingAccess.PRIVATE],
     },

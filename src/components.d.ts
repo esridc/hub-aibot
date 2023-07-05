@@ -31,7 +31,15 @@ export namespace Components {
     }
     interface HubChatFab {
     }
+    interface HubChatGallery {
+    }
     interface HubChatInput {
+    }
+    interface HubChatMap {
+        "datasets": string[];
+        "latitude": number;
+        "location": string;
+        "longitude": number;
     }
     interface HubChatResponse {
         /**
@@ -73,11 +81,23 @@ declare global {
         prototype: HTMLHubChatFabElement;
         new (): HTMLHubChatFabElement;
     };
+    interface HTMLHubChatGalleryElement extends Components.HubChatGallery, HTMLStencilElement {
+    }
+    var HTMLHubChatGalleryElement: {
+        prototype: HTMLHubChatGalleryElement;
+        new (): HTMLHubChatGalleryElement;
+    };
     interface HTMLHubChatInputElement extends Components.HubChatInput, HTMLStencilElement {
     }
     var HTMLHubChatInputElement: {
         prototype: HTMLHubChatInputElement;
         new (): HTMLHubChatInputElement;
+    };
+    interface HTMLHubChatMapElement extends Components.HubChatMap, HTMLStencilElement {
+    }
+    var HTMLHubChatMapElement: {
+        prototype: HTMLHubChatMapElement;
+        new (): HTMLHubChatMapElement;
     };
     interface HTMLHubChatResponseElement extends Components.HubChatResponse, HTMLStencilElement {
     }
@@ -90,7 +110,9 @@ declare global {
         "hub-aibot": HTMLHubAibotElement;
         "hub-chat-action": HTMLHubChatActionElement;
         "hub-chat-fab": HTMLHubChatFabElement;
+        "hub-chat-gallery": HTMLHubChatGalleryElement;
         "hub-chat-input": HTMLHubChatInputElement;
+        "hub-chat-map": HTMLHubChatMapElement;
         "hub-chat-response": HTMLHubChatResponseElement;
     }
 }
@@ -119,8 +141,16 @@ declare namespace LocalJSX {
     }
     interface HubChatFab {
     }
+    interface HubChatGallery {
+    }
     interface HubChatInput {
         "onHubChatInputEntered"?: (event: HubChatInputCustomEvent<HubChatMessage>) => void;
+    }
+    interface HubChatMap {
+        "datasets"?: string[];
+        "latitude"?: number;
+        "location"?: string;
+        "longitude"?: number;
     }
     interface HubChatResponse {
         /**
@@ -137,7 +167,9 @@ declare namespace LocalJSX {
         "hub-aibot": HubAibot;
         "hub-chat-action": HubChatAction;
         "hub-chat-fab": HubChatFab;
+        "hub-chat-gallery": HubChatGallery;
         "hub-chat-input": HubChatInput;
+        "hub-chat-map": HubChatMap;
         "hub-chat-response": HubChatResponse;
     }
 }
@@ -149,7 +181,9 @@ declare module "@stencil/core" {
             "hub-aibot": LocalJSX.HubAibot & JSXBase.HTMLAttributes<HTMLHubAibotElement>;
             "hub-chat-action": LocalJSX.HubChatAction & JSXBase.HTMLAttributes<HTMLHubChatActionElement>;
             "hub-chat-fab": LocalJSX.HubChatFab & JSXBase.HTMLAttributes<HTMLHubChatFabElement>;
+            "hub-chat-gallery": LocalJSX.HubChatGallery & JSXBase.HTMLAttributes<HTMLHubChatGalleryElement>;
             "hub-chat-input": LocalJSX.HubChatInput & JSXBase.HTMLAttributes<HTMLHubChatInputElement>;
+            "hub-chat-map": LocalJSX.HubChatMap & JSXBase.HTMLAttributes<HTMLHubChatMapElement>;
             "hub-chat-response": LocalJSX.HubChatResponse & JSXBase.HTMLAttributes<HTMLHubChatResponseElement>;
         }
     }

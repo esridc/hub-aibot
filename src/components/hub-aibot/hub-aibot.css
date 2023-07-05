@@ -68,13 +68,17 @@
   height: 600px;
 }
 
-
-.messages {
+.chat-window {
   display: flex;
   height: 100%;
+  flex-direction: column;
+}
+
+.messages {
+  flex: 1;
+  display: flex;
   width: 95%;
   padding: 10px;
-  position: absolute;
   overflow-y: scroll;
   flex-direction: column;
   gap: 1rem;
@@ -82,11 +86,10 @@
 
 
 .chat-input {
-  height: 80px;
+  height: 100px;
   width: 100%;
-  position: absolute;
-  bottom: 0;
   background-color: white;
+  flex: 0;
 }
 
 .loading {

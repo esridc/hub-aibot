@@ -25,7 +25,8 @@
   <arcgis-hub-identity
     id="identity"
     client="2kAcJaj7GkBYg2Wp"
-    portal="https://dc.mapsqa.arcgis.com"   
+    portal="https://dc.mapsqa.arcgis.com" 
+    redirect="http://localui.arcgis.com:3333/redirect.html"  
   ></arcgis-hub-identity>
   <style>
     body {
@@ -38,7 +39,7 @@
       height: 80vh;
     }
   </style>
-  
+
   <script>
     const urlParams = new URL(window.location).searchParams;
     const identityEl = document.getElementById("placeholder");

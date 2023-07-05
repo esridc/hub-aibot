@@ -1,2 +1,0 @@
-import{r as s,h as t,H as o}from"./p-5b036533.js";const r=":host{display:block}";const l=class{constructor(t){s(this,t)}render(){return t(o,null,t("slot",null))}};l.style=r;export{l as hub_chat_fab};
-//# sourceMappingURL=p-85a7aaeb.entry.js.map

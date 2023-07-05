@@ -1,0 +1,2 @@
+import{d as i,i as r}from"./p-58421494.js";var t="Expected a function";function n(n,a,e){var o=true,f=true;if(typeof n!="function"){throw new TypeError(t)}if(r(e)){o="leading"in e?!!e.leading:o;f="trailing"in e?!!e.trailing:f}return i(n,a,{leading:o,maxWait:a,trailing:f})}export{n as t};
+//# sourceMappingURL=p-7cf0703a.js.map

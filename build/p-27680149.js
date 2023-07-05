@@ -1,0 +1,8 @@
+import{g as n}from"./p-779078e6.js";
+/*!
+ * All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+ * See https://github.com/Esri/calcite-components/blob/master/LICENSE.md for details.
+ * v1.4.3
+ */
+const t=/firefox/i.test(n());const e=t?new WeakMap:null;function i(){const{disabled:n}=this;if(!n){HTMLElement.prototype.click.call(this)}}function o(n){const i=n.target;if(t&&!e.get(i)){return}const{disabled:o}=i;if(o){n.preventDefault()}}const f=["mousedown","mouseup","click"];function u(n){if(t&&!e.get(n.target)){return}const{disabled:i}=n.target;if(i){n.stopImmediatePropagation();n.preventDefault()}}const r={capture:true};function s(n,t=false){if(n.disabled){n.el.setAttribute("tabindex","-1");n.el.setAttribute("aria-disabled","true");if(n.el.contains(document.activeElement)){document.activeElement.blur()}c(n);return}l(n);if(typeof t==="function"){n.el.setAttribute("tabindex",t.call(n)?"0":"-1")}else if(t===true){n.el.setAttribute("tabindex","0")}else if(t===false){n.el.removeAttribute("tabindex")}else;n.el.removeAttribute("aria-disabled")}function c(n){n.el.click=i;a(t?d(n):n.el)}function a(n){if(!n){return}n.addEventListener("pointerdown",o,r);f.forEach((t=>n.addEventListener(t,u,r)))}function d(n){return e.get(n.el)}function l(n){delete n.el.click;b(t?d(n):n.el)}function b(n){if(!n){return}n.removeEventListener("pointerdown",o,r);f.forEach((t=>n.removeEventListener(t,u,r)))}function p(n){if(!n.disabled||!t){return}const i=n.el.parentElement||n.el;e.set(n.el,i);c(n)}function m(n){if(!t){return}e.delete(n.el);l(n)}export{p as c,m as d,s as u};
+//# sourceMappingURL=p-27680149.js.map

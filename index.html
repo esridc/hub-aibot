@@ -1,4 +1,4 @@
-<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Hub AI Bot</title> <script type="module" src="./build/hub-aibot.esm.js"></script> <script nomodule="" src="./build/hub-aibot.js"></script> <script type="module" src="https://js.arcgis.com/calcite-components/1.4.3/calcite.esm.js"></script> <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.3/calcite.css"> <script type="module" src="https://esri.github.io/hub-components/harnesses/build/hub-components.esm.js"></script> </head> <body> <!-- Delayed render so we can get the API key from URL parameters --> <div id="placeholder"></div> <arcgis-hub-identity id="identity" client="2kAcJaj7GkBYg2Wp" portal="https://dc.mapsqa.arcgis.com"></arcgis-hub-identity> <style>body {
+<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Hub AI Bot</title> <script type="module" src="./build/hub-aibot.esm.js"></script> <script nomodule="" src="./build/hub-aibot.js"></script> <script type="module" src="https://js.arcgis.com/calcite-components/1.4.3/calcite.esm.js"></script> <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.3/calcite.css"> <script type="module" src="https://esri.github.io/hub-components/harnesses/build/hub-components.esm.js"></script> </head> <body> <!-- Delayed render so we can get the API key from URL parameters --> <div id="placeholder"></div> <style>body {
       font-family: sans-serif;
       margin: 0;
       padding: 0;
@@ -8,12 +8,19 @@
       height: 80vh;
     }</style> <script>
     const urlParams = new URL(window.location).searchParams;
-    const identityEl = document.getElementById("placeholder");
+    const placeholderEl = document.getElementById("placeholder");
     let botEl = null;
+
+    // Identity management
+    const identityEl = document.createElement("arcgis-hub-identity");
+    identityEl.portal = "https://dc.mapsqa.arcgis.com"
+    identityEl.client = "2kAcJaj7GkBYg2Wp";
+    identityEl.id = "identity";
+    identityEl.redirect = `${window.location}redirect.html`
+    placeholderEl.appendChild(identityEl);
 
     document.addEventListener('arcgisAppIdentitySignedIn', () => {
       if(!botEl) {
-        const placeholderEl = document.getElementById("placeholder");
         botEl = document.createElement("hub-aibot");
         botEl.modelUrl = "http://localui.arcgis.com:8000/chat"
         botEl.apikey = urlParams.get('key');

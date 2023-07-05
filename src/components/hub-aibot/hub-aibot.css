@@ -3,7 +3,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 9999;
+  /* z-index: 9999; */
 }
 
 .fab {
@@ -17,7 +17,9 @@
   transition: width 0.3s;
   width: 140px;
 }
-
+.content {
+  height: 80vh;
+}
 
 
 .fab:hover .fab-icon {
@@ -53,7 +55,7 @@
   display: block;
 }
 
-.chat-window {
+.chat-window.popup {
   position: fixed;
   bottom: 90px;
   right: 20px;
@@ -63,24 +65,28 @@
   background-color: white;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  height: 600px;
 }
 
-.intro {
-  padding: 10px;
-  font-size: 14px;
-  line-height: 1.5;
-}
 
 .messages {
-  padding: 10px;
-  height: 80%;
-  overflow-y: scroll;
   display: flex;
+  height: 100%;
+  width: 95%;
+  padding: 10px;
+  position: absolute;
+  overflow-y: scroll;
   flex-direction: column;
-  gap: 1rem;  
+  gap: 1rem;
 }
-.author-hub {
-  /* align-self: end; */
+
+
+.chat-input {
+  height: 80px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background-color: white;
 }
 
 .loading {

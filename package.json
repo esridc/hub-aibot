@@ -33,11 +33,15 @@
     "generate": "stencil generate"
   },
   "dependencies": {
+    "@esri/arcgis-rest-auth": "^2.25.0",
+    "@esri/hub-common": "^13.12.0",
+    "@esri/hub-components": "^4.1.2",
+    "@esri/hub-discussions": "^25.1.0",
     "@stencil/core": "^2.13.0",
     "@types/node": "^18.14.0"
   },
   "devDependencies": {
-    "@esri/calcite-components": "^1.0.0-beta.97",
+    "@esri/calcite-components": "^1.4.3",
     "@stencil/sass": "^2.0.0",
     "@stencil/store": "^2.0.1",
     "@types/geojson": "^7946.0.10"

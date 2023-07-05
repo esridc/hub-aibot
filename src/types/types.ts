@@ -1,4 +1,9 @@
 
+export enum ChatbotLayout {
+    Popup = "popup",
+    Modal = "modal"
+}
+
 export enum HubAIModel {
     Nearby = 'nearby',
     Text = 'text',
@@ -11,6 +16,7 @@ export enum HubChatAuthor {
     system = "system"
 }
 export type HubChatMessage = {
+    postId?: string,
     author: string,
     text: string,
     action?: string

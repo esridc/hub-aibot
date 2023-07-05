@@ -1,9 +1,12 @@
 :host {
 }
-
 .message {
   display: grid;
   grid-column-gap: 1px;
+}
+
+.message.removed {
+  display: none;
 }
 
 .avatar {
@@ -21,30 +24,42 @@
 }
 
 .author-hub {
-  justify-content: end;
+  justify-content: start;
   grid-template-areas: 
-  "text avatar";
+  "avatar text"
+  ". feedback ";
 }
-.author-hub .avatar {
+.avatar {
   background-color: blueviolet;  
   background: url('/assets/logo.png')
 }
 .author-hub .text {
   border: 2px solid #EEE;
-  border-radius: 15px 0px 15px 15px;
+  border-radius: 15px 15px 15px 0px;
+}
+
+.feedback {
+  grid-area: feedback;
 }
 
 .author-user {
-  justify-content: start;
+  justify-content: end;
   grid-template-areas: 
-  "avatar text";
+  "text avatar"
+  "feedback .";
+  cursor: pointer;
 }
+.author-user .feedback {
+  display: none;
+}
+
 .author-user .avatar {
   background-color: cornsilk;
   border-radius: 25px;
+  display: none;
 }
 .author-user .text {
   background-color:dodgerblue;
   color: white;
-  border-radius: 0px 15px 15px 15px;
+  border-radius: 15px 15px 0px 15px;
 }

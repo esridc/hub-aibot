@@ -34,6 +34,13 @@ export namespace Components {
     interface HubChatInput {
     }
     interface HubChatResponse {
+        /**
+          * Option to show feedback from AI
+         */
+        "allowFeedback": boolean;
+        /**
+          * Message to display If this message is deleted, this will be removed.
+         */
         "message": HubChatMessage;
     }
 }
@@ -116,6 +123,13 @@ declare namespace LocalJSX {
         "onHubChatInputEntered"?: (event: HubChatInputCustomEvent<HubChatMessage>) => void;
     }
     interface HubChatResponse {
+        /**
+          * Option to show feedback from AI
+         */
+        "allowFeedback"?: boolean;
+        /**
+          * Message to display If this message is deleted, this will be removed.
+         */
         "message"?: HubChatMessage;
     }
     interface IntrinsicElements {

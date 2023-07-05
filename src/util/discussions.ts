@@ -1,9 +1,31 @@
-import { IChannel, IPost, SharingAccess, createChannel, createPost, searchChannels, searchPosts } from '@esri/hub-discussions';
+import { IChannel, IPost, PostReaction, SharingAccess, createChannel, createPost, createReaction, removePost, searchChannels, searchPosts } from '@esri/hub-discussions';
 import { createGroup, IGroup, SearchQueryBuilder, searchGroups } from "@esri/arcgis-rest-portal";
 
 import state from './state';
 
 const hubChatHistoryKeyword = "hubChatHistory";
+
+export async function deleteResponse(postId: string) {
+  return removePost({
+    postId,
+    ...state.context.hubRequestOptions
+  })
+}
+
+
+export async function addResponseFeedback(postId: string = null, reaction: PostReaction = PostReaction.EYES) {
+  if(!postId) {
+    return null
+  };
+  
+  return createReaction({
+    data: {
+      postId,
+      value: reaction,
+    },
+    ...state.context.hubRequestOptions
+  })
+}
 
 export async function findOrCreateChatHistoryGroup() {
   let chatHistoryGroup:IGroup = null;
@@ -72,6 +94,7 @@ export async function getChatHistory(): Promise<IPost[]> {
     },
     ...state.context.hubRequestOptions    
   })
+
 
   return posts.items;
 }

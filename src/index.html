@@ -39,40 +39,6 @@
     }
   </style>
   
-
-<!--         
-    <script>
-      const shellPanelStart = document.getElementById("shell-panel-start");
-      const shellPanelEnd = document.getElementById("shell-panel-end");
-      const panelStart = document.getElementById("panel-start");
-      const panelEnd = document.getElementById("panel-end");
-  
-      const actionsStart = shellPanelStart?.querySelectorAll("calcite-action");
-      const actionsEnd = shellPanelEnd?.querySelectorAll("calcite-action");
-  
-      actionsStart?.forEach(el => {
-          el.addEventListener("click", function(event) {
-              actionsStart?.forEach(action => (action.active = false));
-              el.active = panelStart.closed;
-              shellPanelStart.collapsed = !shellPanelStart.collapsed;
-              panelStart.closed = !panelStart.closed;
-          });
-      });
-  
-      panelEnd?.addEventListener("calcitePanelClose", function(event) {
-          actionsEnd.forEach(action => (action.active = false));
-          shellPanelEnd.collapsed = true;
-      });
-  
-      actionsEnd?.forEach(el => {
-          el.addEventListener("click", function(event) {
-              actionsEnd?.forEach(action => (action.active = false));
-              el.active = panelEnd.closed;
-              shellPanelEnd.collapsed = !shellPanelEnd.collapsed;
-              panelEnd.closed = !panelEnd.closed;
-          });
-      });
-  </script> -->
   <script>
     const urlParams = new URL(window.location).searchParams;
     const identityEl = document.getElementById("placeholder");

@@ -72,6 +72,7 @@
 .messages {
   display: flex;
   height: 100%;
+  width: 95%;
   padding: 10px;
   position: absolute;
   overflow-y: scroll;
@@ -82,7 +83,7 @@
 
 .chat-input {
   height: 80px;
-  width: 357px;
+  width: 100%;
   position: absolute;
   bottom: 0;
   background-color: white;

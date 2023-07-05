@@ -59,11 +59,16 @@ export class HubAibot {
     const posts = await getChatHistory();
 
     console.debug("User signed in, getting chat history", {posts})
-
+    
     posts.map((post) => {
+      // We store AI responses with the User, but prefix with "AI: ...".
+      const author = post.body.match(/^AI:/) ? "hub" : "user";
+      post.body = post.body.replace(/^AI: /,'');
+
       this.messages.push({
-        author: "user",
-        text: post.body
+        author: author,
+        text: post.body,
+        postId: post.id
       })
     })
   }
@@ -82,26 +87,26 @@ export class HubAibot {
 
     this.messages = [...this.messages, message];
     this.loading = true;
-    let text = "";
+    let responseText = "";
     console.debug("calling model", [this.model, message])
     switch(this.model){
       case HubAIModel.Nearby: 
-        text = await fetchArcGIS(message.text);
+        responseText = await fetchArcGIS(message.text);
         break;
       case HubAIModel.Text: 
-        text = await fetchTextChat(message.text, this.language, this.personality, this.apikey);
+        responseText = await fetchTextChat(message.text, this.language, this.personality, this.apikey);
         break;
       case HubAIModel.Image:
-        text = await fetchImageChat(message.text, this.apikey);
+        responseText = await fetchImageChat(message.text, this.apikey);
         break;
     }
     
-    const aiPost = addChatHistory(`AI: ${message.text}`);
+    const aiPost = addChatHistory(`AI: ${responseText}`);
     console.debug("added to chat history", {message, aiPost})
 
     this.messages = [...this.messages, {
       author: HubChatAuthor.hub,
-      text: text}];
+      text: responseText}];
     this.loading = false;      
   }
 
@@ -140,7 +145,9 @@ export class HubAibot {
         <hub-chat-action actionLink={() => this.setupChat()}>Create Chat History</hub-chat-action> */}
 
         {this.messages.map((message) => (
-          <hub-chat-response class={`message author-${message.author}`} message={message}></hub-chat-response>
+          <hub-chat-response 
+            class={`message author-${message.author}`} 
+            message={message}></hub-chat-response>
         ))}
         {this.loading ? this.renderLoading() : null}
       </div>
@@ -169,7 +176,7 @@ export class HubAibot {
   private renderShell(content) {
     return (
       <calcite-shell>
-      <calcite-shell-panel slot="panel-start" position="start" id="shell-panel-start">
+      <calcite-shell-panel collapsed slot="panel-start" position="start" id="shell-panel-start">
           <calcite-action-bar slot="action-bar">
               <calcite-action active text="Chats" icon="speech-bubble" indicator></calcite-action>
               <calcite-action icon="configure" text="Configure"></calcite-action>
@@ -196,6 +203,40 @@ export class HubAibot {
   </calcite-shell>
     );
   }
+
+//   <!--         
+//   <script>
+//     const shellPanelStart = document.getElementById("shell-panel-start");
+//     const shellPanelEnd = document.getElementById("shell-panel-end");
+//     const panelStart = document.getElementById("panel-start");
+//     const panelEnd = document.getElementById("panel-end");
+
+//     const actionsStart = shellPanelStart?.querySelectorAll("calcite-action");
+//     const actionsEnd = shellPanelEnd?.querySelectorAll("calcite-action");
+
+//     actionsStart?.forEach(el => {
+//         el.addEventListener("click", function(event) {
+//             actionsStart?.forEach(action => (action.active = false));
+//             el.active = panelStart.closed;
+//             shellPanelStart.collapsed = !shellPanelStart.collapsed;
+//             panelStart.closed = !panelStart.closed;
+//         });
+//     });
+
+//     panelEnd?.addEventListener("calcitePanelClose", function(event) {
+//         actionsEnd.forEach(action => (action.active = false));
+//         shellPanelEnd.collapsed = true;
+//     });
+
+//     actionsEnd?.forEach(el => {
+//         el.addEventListener("click", function(event) {
+//             actionsEnd?.forEach(action => (action.active = false));
+//             el.active = panelEnd.closed;
+//             shellPanelEnd.collapsed = !shellPanelEnd.collapsed;
+//             panelEnd.closed = !panelEnd.closed;
+//         });
+//     });
+// </script> -->  
   private renderHistorySelect(heading:string = "", active:boolean = false) {
     return <calcite-block heading={heading}>
       <calcite-icon scale="s" slot="icon" icon={active ? "check-circle" : ""}></calcite-icon>
@@ -217,8 +258,8 @@ export class HubAibot {
 
   private renderIntro() {
     return [
-      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'Welcome to the Hub Compass Chatbot!' }}></hub-chat-response>,
-      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'How can I assist you today?' }}></hub-chat-response>
+      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'Welcome to the Hub Compass Chatbot!' }} allowFeedback={false}></hub-chat-response>,
+      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'How can I assist you today?' }} allowFeedback={false}></hub-chat-response>
     ]
   }
 }

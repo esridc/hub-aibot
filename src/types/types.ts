@@ -16,6 +16,7 @@ export enum HubChatAuthor {
     system = "system"
 }
 export type HubChatMessage = {
+    postId?: string,
     author: string,
     text: string,
     action?: string

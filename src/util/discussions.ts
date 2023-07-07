@@ -43,7 +43,13 @@ export async function findOrCreateChatHistoryGroup() {
 
   // TODO: catch for potential duplicate 'chat history' groups
   if(searchResponse.results.length > 0) {
-    chatHistoryGroup = searchResponse.results[0];
+
+    // only get the group this user is the owner of.
+    searchResponse.results.map((group) => {
+      if(group.owner === state.user.username) {
+        chatHistoryGroup = group
+      }
+    });
   } else {
     const createGroupResponse = await createGroup({
       group: {
@@ -78,7 +84,7 @@ export async function createChatHistory(chatHistoryGroup: IGroup) {
   
     return channel;
   }
-  
+
 }
 
 // TODO move this to state?

@@ -20,9 +20,11 @@ export namespace Components {
           * Option for Chatbot to be a FAB popup, or a full screen window
          */
         "layout": ChatbotLayout;
+        "loadHistory": (channelId?: string) => Promise<void>;
         "model": HubAIModel;
         "modelUrl": string;
         "personality": string;
+        "useAI": boolean;
         "welcome": string;
     }
     interface HubChatAction {
@@ -34,6 +36,7 @@ export namespace Components {
     interface HubChatGallery {
     }
     interface HubChatInput {
+        "disabled": boolean;
     }
     interface HubChatMap {
         "datasets": string[];
@@ -133,6 +136,7 @@ declare namespace LocalJSX {
         "model"?: HubAIModel;
         "modelUrl"?: string;
         "personality"?: string;
+        "useAI"?: boolean;
         "welcome"?: string;
     }
     interface HubChatAction {
@@ -144,6 +148,7 @@ declare namespace LocalJSX {
     interface HubChatGallery {
     }
     interface HubChatInput {
+        "disabled"?: boolean;
         "onHubChatInputEntered"?: (event: HubChatInputCustomEvent<HubChatMessage>) => void;
     }
     interface HubChatMap {

@@ -24,7 +24,8 @@ export class HubChatResponse {
   @Prop() allowFeedback: boolean = null;
 
   componentWillLoad() {
-    this.allowFeedback = this.message.author !== "user" && this.allowFeedback === null;
+    this.allowFeedback = this.message.author === "hub" && this.allowFeedback === null;
+    
   }
 
   cleanMessageText(text): string {

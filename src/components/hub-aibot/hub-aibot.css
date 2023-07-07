@@ -21,7 +21,10 @@
   height: 80vh;
 }
 
-
+hub-chat-map {
+  width: 100%;
+  height: 100%;  
+}
 .fab:hover .fab-icon {
   background-color: gray;
   border-color: #0077c2;
@@ -123,6 +126,12 @@
 
 
 
+.channel {
+  cursor: pointer;
+}
+.channel:hover {
+  background-color: dodgerblue;
+}
 
 .example-prompts {
   display: flex;

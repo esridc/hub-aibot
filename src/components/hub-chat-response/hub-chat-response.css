@@ -23,13 +23,16 @@
   color: midnightblue;
 }
 
-.author-hub {
+.message {
   justify-content: start;
   grid-template-areas: 
   "avatar text"
   ". feedback ";
 }
-.avatar {
+.message .avatar {
+  background: url('/data/andy.jpg');
+}
+.author-hub .avatar {
   background-color: blueviolet;  
   background: url('/assets/logo.png')
 }

@@ -8,6 +8,12 @@
   align-items: center;
   border-top: 1px solid #e0e0e0;
 }
+.input-container.disabled {
+  background-color: gray;
+}
+.input-container.disabled .send-button {
+  display: none;
+}
 
 .input {
   flex-grow: 1;
@@ -17,8 +23,8 @@
   resize: none;
   font-size: 14px;
   height: 100%;
+  min-height: 40px;
 }
-
 .send-button {
   display: flex;
   align-items: center;

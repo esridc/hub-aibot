@@ -1,4 +1,4 @@
-import { Component, Event, EventEmitter, Host, h } from '@stencil/core';
+import { Component, Event, EventEmitter, Host, Prop, h } from '@stencil/core';
 import { HubChatAuthor, HubChatMessage } from '../../types/types';
 
 @Component({
@@ -8,6 +8,8 @@ import { HubChatAuthor, HubChatMessage } from '../../types/types';
 })
 export class HubChatInput {
   private inputEl!: HTMLDivElement;
+
+  @Prop() disabled:boolean = false;
 
   @Event() hubChatInputEntered: EventEmitter<HubChatMessage>;
 
@@ -30,10 +32,10 @@ export class HubChatInput {
     return (
       <Host>
         <slot></slot>
-        <div class="input-container">
+        <div class={`input-container ${this.disabled ? 'disabled' : ''}`}>
           <div
-            class="input"
-            contentEditable={true}
+            class={`input`}
+            contentEditable={!this.disabled}
             onKeyDown={(event: KeyboardEvent) => this.handleKeyDown(event)}
             ref={(el) => (this.inputEl = el!)}
           ></div>

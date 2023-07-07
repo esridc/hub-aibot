@@ -30,7 +30,6 @@ export class HubChatResponse {
   cleanMessageText(text): string {
     console.debug("Response", text)
     let output = text.replace(/(?:\r\n|\r|\n|\\n)/g, '<br>');
-
     return output;
   }
 

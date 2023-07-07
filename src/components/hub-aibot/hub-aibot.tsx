@@ -2,7 +2,7 @@ import { Component, h, Listen, Prop, State } from '@stencil/core';
 import { setAssetPath } from "@esri/calcite-components/dist/components";
 import { ChatbotLayout, HubAIModel, HubChatAuthor, HubChatMessage } from '../../types/types';
 import { fetchArcGIS, fetchImageChat, fetchTextChat, setModelUrl } from '../../util/api';
-import { addChatHistory, getChatHistory } from '../../util/discussions';
+import { addChatHistory, getChannels, getChatChannel, getChatHistory, getGroupChannel } from '../../util/discussions';
 import { IChannel } from '@esri/hub-discussions';
 
 // setAssetPath("./assets");
@@ -32,8 +32,8 @@ export class HubAibot {
   @Prop() language:string = 'en';
   @State() messages: HubChatMessage[] = [];
   @State() loading = false;
-  @State() chatHistory: IChannel = null
-
+  @State() currentChannel: IChannel = null
+  @State() availableChannels: IChannel[] = []
 
 // this.sendMessage();
   async componentWillLoad() {
@@ -49,18 +49,20 @@ export class HubAibot {
       });
     }
 
-    await this.loadHistory();
+    this.availableChannels = getChannels();
+    this.currentChannel = await getChatChannel();
+    await this.loadHistory(this.currentChannel.id);
 
   }
 
   // We need to load user context first
   // @Listen('signInCompleted')
-  async loadHistory() {
-    
-    const posts = await getChatHistory();
+  async loadHistory(channelId:string = null) {
+    console.debug("loadHistory", {channelId})
+    const posts = await getChatHistory(channelId);
 
-    console.debug("User signed in, getting chat history", {posts})
-    
+    console.debug("User signed in, getting chat history", {channelId, posts})
+    this.messages = [];
     posts.map((post) => {
       // We store AI responses with the User, but prefix with "AI: ...".
       const author = post.body.match(/^AI:/) ? "hub" : "user";
@@ -80,9 +82,10 @@ export class HubAibot {
 
   @Listen('hubChatInputEntered')
   async sendMessage(event: CustomEvent<HubChatMessage>) {
+    // TODO: clean up this snippet for storing  message history.
     const message = event.detail;
-
-    const post = addChatHistory(message.text);
+    const post = await addChatHistory(this.currentChannel.id, message.text);
+    message.postId = post.id;
 
     console.debug("added to chat history", {message, post})
 
@@ -102,22 +105,24 @@ export class HubAibot {
         break;
     }
     
-    const aiPost = addChatHistory(`AI: ${responseText}`);
+    const aiPost = await addChatHistory(this.currentChannel.id, `AI: ${responseText}`, post.id);
     console.debug("added to chat history", {message, aiPost})
 
     this.messages = [...this.messages, {
       author: HubChatAuthor.hub,
-      text: responseText}];
+      text: responseText,
+      postId: aiPost.id
+    }];
     this.loading = false;      
   }
 
   async viewChat() {
     console.debug("viewChat")
-    // this.chatHistory = await getChatHistory();
+    // this.currentChannel = await getChatHistory();
   }
   async setupChat() {
     console.debug("setupChat");
-    // const channel = await createChatHistory();
+    // const channel = await createcurrentChannel();
     // console.log("channel", channel);
   }
   render() {
@@ -161,7 +166,7 @@ export class HubAibot {
   private renderChatBody(): any {
     return <div class={`chat-window ${this.layout}`}>
       <div class="messages" ref={(el) => this.messagesEl = el}>
-        {this.renderIntro()}
+        {/* {this.renderIntro()} */}
 
         {this.messages.map((message) => (
           <hub-chat-response
@@ -175,7 +180,7 @@ export class HubAibot {
   }
 
   private renderChatModal(open: boolean, content: any[]) {
-    return <calcite-modal open={open} aria-labelledby="modal-title" id="example-modal">
+    return <calcite-modal fullscreen open={open} aria-labelledby="modal-title" id="example-modal">
       <div slot="header" id="modal-title">
         AI Chat
       </div>
@@ -188,19 +193,23 @@ export class HubAibot {
   private renderShell(content) {
     return (
       <calcite-shell>
-      <calcite-shell-panel collapsed slot="panel-start" position="start" id="shell-panel-start">
+      <calcite-shell-panel collapsed={false} slot="panel-start" position="start" id="shell-panel-start">
           <calcite-action-bar slot="action-bar">
               <calcite-action active text="Chats" icon="speech-bubble" indicator></calcite-action>
               <calcite-action icon="configure" text="Configure"></calcite-action>
           </calcite-action-bar>
-          <calcite-panel heading="Previous Chats" id="panel-start">
-            {this.renderHistorySelect("Today", true)}
-            {this.renderHistorySelect("June 25, 2023")}
+          <calcite-panel heading="Channels" id="panel-start">
+            {this.availableChannels.map((channel) => {
+              return this.renderHistorySelect(channel)
+            })}
           </calcite-panel>
       </calcite-shell-panel>
 
-      <calcite-panel heading="Active Chat">
+      <calcite-panel heading={`Channel: ${this.currentChannel['title'] || this.currentChannel.name}`}>
         {content}
+      </calcite-panel>
+      <calcite-panel heading="Map" slot="panel-end"  >
+        <hub-chat-map></hub-chat-map>
       </calcite-panel>
   </calcite-shell>
     );
@@ -239,8 +248,26 @@ export class HubAibot {
 //         });
 //     });
 // </script> -->  
-  private renderHistorySelect(heading:string = "", active:boolean = false) {
-    return <calcite-block heading={heading}>
+
+  /**
+   * Change to this channel body
+   */
+  private async selectChannel(channel: IChannel) {
+    this.currentChannel = channel;
+    console.debug("selectChannel", channel)
+    
+    // We're actually showing groups, so get the corresponding Channel, if it exists.
+    const groupChannel = await getGroupChannel(channel.id);
+    
+    if(!!groupChannel) {
+      this.currentChannel = groupChannel;
+      await this.loadHistory(this.currentChannel.id)
+    } else {
+      this.messages = [];
+    }
+  }
+  private renderHistorySelect(channel: any = null, active:boolean = false) {
+    return <calcite-block heading={channel.title} onClick={(_ev) => this.selectChannel(channel)}>
       <calcite-icon scale="s" slot="icon" icon={active ? "check-circle" : ""}></calcite-icon>
 
       {this.renderFeedback}

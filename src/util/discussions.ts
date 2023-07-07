@@ -84,12 +84,15 @@ export async function createChatHistory(chatHistoryGroup: IGroup) {
 // TODO move this to state?
 let chatHistoryChannel:IChannel = null;
 
-export async function getChatHistory(): Promise<IPost[]> {
-  chatHistoryChannel = await getChatChannel();
+export async function getChatHistory(channelId: string=null): Promise<IPost[]> {
+  if(!channelId) {
+    chatHistoryChannel = await getChatChannel();
+    channelId = chatHistoryChannel.id
+  }
   const posts = await searchPosts({
     data: {
       num: 100,
-      channels: [chatHistoryChannel.id],
+      channels: [channelId],
       // access: [SharingAccess.PRIVATE],
     },
     ...state.context.hubRequestOptions    
@@ -98,22 +101,36 @@ export async function getChatHistory(): Promise<IPost[]> {
 
   return posts.items;
 }
-export async function addChatHistory(text: string ) {
-
- const post = await createPost({
-  data: {
-
-    channelId: chatHistoryChannel.id,
+export async function addChatHistory(channelId:string, text: string, postId: string = null) {
+  const data = {
+    channelId: channelId,
     body: text,
+    parentId: postId,
     discussion: 'hub://compass/general'
-  },
-  ...state.context.hubRequestOptions    
-})
+  }
 
-return post;
+
+  const post = await createPost({
+    data,
+    ...state.context.hubRequestOptions    
+  })
+
+  return post;
 
 }
 
+export async function getGroupChannel(groupId: string = "") {
+  const channels = await searchChannels({
+    data: {
+      // num: 1,
+      groups: [groupId],
+      // access: [SharingAccess.PRIVATE],
+    },
+    ...state.context.hubRequestOptions
+  })
+
+  return channels.items.length > 0 ? channels.items[0] : null;
+}
 export async function getChatChannel() {
 
   const chatHistoryGroup = await findOrCreateChatHistoryGroup();
@@ -139,4 +156,10 @@ export async function getChatChannel() {
   console.debug("chatHistoryChannel", chatHistoryChannel);
 
   return chatHistoryChannel;
+}
+
+export function getChannels() {
+  console.debug("getChannels", state.user.groups);
+
+  return state.user.groups
 }

@@ -238,11 +238,11 @@ export class HubAibot {
     </calcite-modal>;
   }
 
-  private actionChannelsEl:HTMLCalciteActionElement;
+  // private actionChannelsEl:HTMLCalciteActionElement;
   private actionMapEl:HTMLCalciteActionElement;
-  private channelsPanelEl:HTMLCalcitePanelElement;
+  // private channelsPanelEl:HTMLCalcitePanelElement;
   private shellPanelEl:HTMLCalciteShellPanelElement;
-  private shellMapEl:HTMLCalciteShellPanelElement;
+  // private shellMapEl:HTMLCalciteShellPanelElement;
   private hubCompassHistoryEl: HTMLHubCompassHistoryElement;
 
   private renderShell(content) {
@@ -250,14 +250,17 @@ export class HubAibot {
       <calcite-shell>
       <calcite-shell-panel ref={(el) => this.shellPanelEl = el} collapsed={true} slot="panel-start" position="start" id="shell-panel-start">
           <calcite-action-bar slot="action-bar">
-              <calcite-action ref={(el) => this.actionChannelsEl = el} 
+              <calcite-action 
+                // ref={(el) => this.actionChannelsEl = el} 
                 onClick={() => { this.shellPanelEl.collapsed = !this.shellPanelEl.collapsed; this.actionMapEl.active = !this.shellPanelEl.collapsed}}
                 active text="Channels" icon="speech-bubble" indicator></calcite-action>
               {/* <calcite-action ref={(el) => this.actionMapEl = el} 
                 onClick={() => { this.shellMapEl.collapsed = !this.shellMapEl.collapsed; this.actionMapEl.active = !this.shellMapEl.collapsed}}
                 icon="Map" text="Map"></calcite-action> */}
           </calcite-action-bar>
-          <calcite-panel ref={(el) => this.channelsPanelEl = el} heading="Channels" id="panel-start">
+          <calcite-panel 
+            // ref={(el) => this.channelsPanelEl = el} 
+            heading="Channels" id="panel-start">
             {this.availableChannels.map((channel) => {
               return this.renderHistorySelect(channel)
             })}

@@ -1,0 +1,12 @@
+import { s as s$1, mk as x, ml as c$1, f as s$2, mm as _, dD as f$1, dy as M, e0 as se, dn as c$2 } from './hub-compass-map-f4225e12.js';
+import './index-d436d5f8.js';
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+const s=s$1.getLogger("esri.layers.support.labelFormatUtils"),c={type:"simple",evaluate:()=>null},f={getAttribute:(e,r)=>e.field(r)};async function p(r,t,n){if(!r||!r.symbol||!t)return c;const a=r.where,o=x(r),p=a?await import('./WhereClause-fbad3eb1.js').then(function (n) { return n.W; }):null;let m;if("arcade"===o.type){const r=await c$1(o.expression,n,t);if(null==r)return c;m={type:"arcade",evaluate(t){try{const e=r.evaluate({$feature:"attributes"in t?r.repurposeFeature(t):t},r.services);if(null!=e)return e.toString()}catch(n){s.error(new s$2("arcade-expression-error","Encountered an error when evaluating label expression for feature",{error:n,feature:t,expression:o}));}return null},needsHydrationToEvaluate:()=>null==_(o.expression)};}else m={type:"simple",evaluate:e=>o.expression.replaceAll(/{[^}]*}/g,(r=>{const n=r.slice(1,-1),a=t.get(n);if(!a)return r;let o=null;if("attributes"in e){e&&e.attributes&&(o=e.attributes[a.name]);}else o=e.field(a.name);return null==o?"":d(o,a)}))};if(a){let r;try{r=p.WhereClause.create(a,t);}catch(g){return s.error(new s$2("bad-where-clause","Encountered an error when evaluating where clause, ignoring",{where:a,error:g})),c}const n=m.evaluate;m.evaluate=t=>{const o="attributes"in t?void 0:f;try{if(r.testFeature(t,o))return n(t)}catch(g){s.error(new s$2("bad-where-clause","Encountered an error when evaluating where clause for feature",{where:a,feature:t,error:g}));}return null};}return m}function d(e,r){if(null==e)return "";const l=r.domain;if(l)if("codedValue"===l.type||"coded-value"===l.type){const r=e;for(const e of l.codedValues)if(e.code===r)return e.name}else if("range"===l.type){const r=+e,t="range"in l?l.range[0]:l.minValue,n="range"in l?l.range[1]:l.maxValue;if(t<=r&&r<=n)return l.name}let i=e;return "date"===r.type||"esriFieldTypeDate"===r.type?i=f$1(i,M("short-date")):se(r)&&(i=c$2(+i)),i||""}
+
+export { p as createLabelFunction, d as formatField };
+
+//# sourceMappingURL=labelFormatUtils-d486b5d3.js.map

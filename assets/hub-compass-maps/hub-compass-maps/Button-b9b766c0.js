@@ -1,0 +1,11 @@
+import { F as Fe, l, m as mt, n as ne, J as Je, K as Kt } from './Popup-f76fcc73.js';
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+class n extends Fe{_beforeChanged(){super._beforeChanged(),(this.isDirty("cornerRadiusTL")||this.isDirty("cornerRadiusTR")||this.isDirty("cornerRadiusBR")||this.isDirty("cornerRadiusBL"))&&(this._clear=!0);}_draw(){let e=this.width(),a=this.height(),r=e,n=a,o=r/Math.abs(e),h=n/Math.abs(a);if(l(r)&&l(n)){let e=Math.min(r,n)/2,s=mt(this.get("cornerRadiusTL",8),e),a=mt(this.get("cornerRadiusTR",8),e),c=mt(this.get("cornerRadiusBR",8),e),l=mt(this.get("cornerRadiusBL",8),e),d=Math.min(Math.abs(r/2),Math.abs(n/2));s=ne(s,0,d),a=ne(a,0,d),c=ne(c,0,d),l=ne(l,0,d);const b=this._display;b.moveTo(s*o,0),b.lineTo(r-a*o,0),a>0&&b.arcTo(r,0,r,a*h,a),b.lineTo(r,n-c*h),c>0&&b.arcTo(r,n,r-c*o,n,c),b.lineTo(l*o,n),l>0&&b.arcTo(0,n,0,n-l*h,l),b.lineTo(0,s*h),s>0&&b.arcTo(0,0,s*o,0,s),b.closePath();}}}Object.defineProperty(n,"className",{enumerable:!0,configurable:!0,writable:!0,value:"RoundedRectangle"}),Object.defineProperty(n,"classNames",{enumerable:!0,configurable:!0,writable:!0,value:Fe.classNames.concat([n.className])});class o extends Je{_afterNew(){this._settings.themeTags=Kt(this._settings.themeTags,["button"]),super._afterNew(),this._settings.background||this.set("background",n.new(this._root,{themeTags:Kt(this._settings.themeTags,["background"])}));}_prepareChildren(){if(super._prepareChildren(),this.isDirty("icon")){const e=this._prevSettings.icon,s=this.get("icon");s!==e&&(this._disposeProperty("icon"),e&&e.dispose(),s&&this.children.push(s),this._prevSettings.icon=s);}if(this.isDirty("label")){const e=this._prevSettings.label,s=this.get("label");s!==e&&(this._disposeProperty("label"),e&&e.dispose(),s&&this.children.push(s),this._prevSettings.label=s);}}}Object.defineProperty(o,"className",{enumerable:!0,configurable:!0,writable:!0,value:"Button"}),Object.defineProperty(o,"classNames",{enumerable:!0,configurable:!0,writable:!0,value:Je.classNames.concat([o.className])});
+
+export { n, o };
+
+//# sourceMappingURL=Button-b9b766c0.js.map

@@ -1,0 +1,46 @@
+import { jx as u$2, cU as i$1, a0 as m$1, kn as c$1, a1 as e$1, a2 as y$1, a9 as x, i1 as h$2, a3 as a$1, iQ as l$3, h_ as r$2, cL as V, J as l$4, eK as w, eL as n$2, bT as n$3, ko as a$2, fN as tn, kp as h$3, kq as e$2, fo as t$2, gq as c$3, gs as O, dc as b$1 } from './hub-compass-map-4d751555.js';
+import { c as c$2 } from './Analysis-8edbe7b2.js';
+import { g as g$1 } from './persistable-c575d254.js';
+import './index-d436d5f8.js';
+import './multiOriginJSONSupportUtils-c04f5031.js';
+import './resourceExtension-077825f2.js';
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+function e(e,t){return l$2(e)===l$2(t)}function l$2(e){if(null==e)return null;const l=null!=e.layer?e.layer.id:"";let t=null;return t=null!=e.objectId?e.objectId:null!=e.layer&&"objectIdField"in e.layer&&null!=e.layer.objectIdField&&null!=e.attributes?e.attributes[e.layer.objectIdField]:e.uid,null==t?null:`o-${l}-${t}`}const t$1={json:{write:{writer:r$1,target:{"feature.layerId":{type:[Number,String]},"feature.objectId":{type:[Number,String]}}},origins:{"web-scene":{read:n$1}}}};function r$1(e,l){null!=e&&null!=e.layer?.objectIdField&&null!=e.attributes&&(l.feature={layerId:e.layer.id,objectId:e.attributes[e.layer.objectIdField]});}function n$1(e){if(null!=e.layerId&&null!=e.objectId)return {uid:null,layer:{id:e.layerId,objectIdField:"ObjectId"},attributes:{ObjectId:e.objectId}}}
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+let f$3=class extends(u$2(i$1(m$1))){constructor(o){super(o),this.position=null,this.elevationInfo=null,this.feature=null;}equals(o){return c$1(this.position,o.position)&&c$1(this.elevationInfo,o.elevationInfo)&&e(this.feature,o.feature)}};e$1([y$1({type:x,json:{write:{isRequired:!0}}})],f$3.prototype,"position",void 0),e$1([y$1({type:h$2}),g$1()],f$3.prototype,"elevationInfo",void 0),e$1([y$1(t$1)],f$3.prototype,"feature",void 0),f$3=e$1([a$1("esri.analysis.LineOfSightAnalysisObserver")],f$3);const u$1=f$3;
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+let l$1=class extends(u$2(l$3)){constructor(o){super(o),this.position=null,this.elevationInfo=null,this.feature=null;}equals(o){return c$1(this.position,o.position)&&c$1(this.elevationInfo,o.elevationInfo)&&e(this.feature,o.feature)}};e$1([y$1({type:x}),g$1()],l$1.prototype,"position",void 0),e$1([y$1({type:h$2}),g$1()],l$1.prototype,"elevationInfo",void 0),e$1([y$1(t$1)],l$1.prototype,"feature",void 0),l$1=e$1([a$1("esri.analysis.LineOfSightAnalysisTarget")],l$1);const f$2=l$1;
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+function n(e){return e?b:p}function t(e,t){return null!=t&&t.mode?t.mode:n(e).mode}function o(e,t){return null!=t?t:n(e)}function r(e,n){return t(null!=e&&e.hasZ,n)}function u(e,n){return o(null!=e&&!!e.hasZ,n)}function l(e){const n=a(e);return r(e.geometry,n)}function s(n){const t=a(n),o=r(n.geometry,t);return {mode:o,offset:null!=t&&"on-the-ground"!==o?(t.offset??0)*r$2(t.unit??"meters"):0}}function i(e){if("on-the-ground"===l(e))return !1;const n=a(e),t=null!=n&&n.featureExpressionInfo?n.featureExpressionInfo.expression:null;return !(!t||"0"===t)}function a(e){return e.layer&&"elevationInfo"in e.layer?e.layer.elevationInfo:null}function f$1(e,n,t){if(null==t||!t.mode)return;const o=e.hasZ?e.z:0,r=null!=t.offset?t.offset:0;switch(t.mode){case"absolute-height":return o-r;case"on-the-ground":return 0;case"relative-to-ground":return o-((n.elevationProvider.getElevation(e.x,e.y,o,e.spatialReference,"ground")??0)+r);case"relative-to-scene":return o-((n.elevationProvider.getElevation(e.x,e.y,o,e.spatialReference,"scene")??0)+r)}}function c(e,n,t,o=null){return d$2(e,n.x,n.y,n.hasZ?n.z:0,n.spatialReference,t,o)}function v$1(e,n,t,o,r=null){return d$2(e,n[0],n[1],n.length>2?n[2]:0,t,o,r)}function d$2(e,n,t,o,r,u,l=null){if(null==u)return;const s=null!=l?l.mode:"absolute-height";if("on-the-ground"===s)return 0;const{absoluteZ:i}=g(n,t,o,r,e,u);return h$1(i,n,t,o,r,e,l,s)}function g(e,n,t,o,r,u){const l=null!=u.offset?u.offset:0;switch(u.mode){case"absolute-height":return {absoluteZ:t+l,elevation:0};case"on-the-ground":{const t=r.elevationProvider.getElevation(e,n,0,o,"ground")??0;return {absoluteZ:t,elevation:t}}case"relative-to-ground":{const u=r.elevationProvider.getElevation(e,n,t,o,"ground")??0;return {absoluteZ:t+u+l,elevation:u}}case"relative-to-scene":{const u=r.elevationProvider.getElevation(e,n,t,o,"scene")??0;return {absoluteZ:t+u+l,elevation:u}}}}function h$1(e,n,t,o,r,u,l,s){const i=null!=l&&null!=l.offset?l.offset:0;switch(s){case"absolute-height":return e-i;case"relative-to-ground":return e-((u.elevationProvider.getElevation(n,t,o,r,"ground")??0)+i);case"relative-to-scene":return e-((u.elevationProvider.getElevation(n,t,o,r,"scene")??0)+i)}}function m(e,n){if(null==n)return !1;const{mode:t}=n;return null!=t&&("scene"===e&&"relative-to-scene"===t||"ground"===e&&"absolute-height"!==t)}const b={mode:"absolute-height",offset:0},p={mode:"on-the-ground",offset:null};function y(e,n){return e===n||null!=e&&null!=n&&e.mode===n.mode&&e.offset===n.offset}
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+const d$1=V.ofType(f$2);let v=class extends c$2{constructor(e){super(e),this.type="line-of-sight",this.observer=null,this.extent=null;}initialize(){this.addHandles(l$4((()=>this._computeExtent()),(e=>{null!=e&&null!=e.pending||this._set("extent",null!=e?e.extent:null);}),w));}get targets(){return this._get("targets")||new d$1}set targets(e){this._set("targets",n$2(e,this.targets,d$1));}get spatialReference(){return null!=this.observer&&null!=this.observer.position?this.observer.position.spatialReference:null}get requiredPropertiesForEditing(){return [n$3(this.observer,(e=>e.position))]}async waitComputeExtent(){const e=this._computeExtent();return null!=e?e.pending:Promise.resolve()}_computeExtent(){const e=this.spatialReference;if(null==this.observer||null==this.observer.position||null==e)return null;const t=e=>"absolute-height"===r(e.position,e.elevationInfo),r$1=this.observer.position,o=a$2(r$1.x,r$1.y,r$1.z,r$1.x,r$1.y,r$1.z);for(const i of this.targets)if(null!=i.position){const t=tn(i.position,e);if(null!=t.pending)return {pending:t.pending,extent:null};if(null!=t.geometry){const{x:e,y:r,z:s}=t.geometry;h$3(o,[e,r,s]);}}const s=e$2(o,e);return t(this.observer)&&this.targets.every(t)||(s.zmin=void 0,s.zmax=void 0),{pending:null,extent:s}}clear(){this.observer=null,this.targets.removeAll();}};e$1([y$1({type:["line-of-sight"]})],v.prototype,"type",void 0),e$1([y$1({type:u$1,json:{read:!0,write:!0}})],v.prototype,"observer",void 0),e$1([y$1({cast:t$2,type:d$1,nonNullable:!0,json:{read:!0,write:!0}})],v.prototype,"targets",null),e$1([y$1({value:null,readOnly:!0})],v.prototype,"extent",void 0),e$1([y$1({readOnly:!0})],v.prototype,"spatialReference",null),e$1([y$1({readOnly:!0})],v.prototype,"requiredPropertiesForEditing",null),v=e$1([a$1("esri.analysis.LineOfSightAnalysis")],v);const j=v;
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+const h=V.ofType(f$2);let d=class extends(c$3(O(b$1))){constructor(e){super(e),this.type="line-of-sight",this.operationalLayerType="LineOfSightLayer",this.analysis=new j,this.opacity=1;}initialize(){this.addHandles(l$4((()=>this.analysis),((e,s)=>{null!=s&&s.parent===this&&(s.parent=null),null!=e&&(e.parent=this);}),w));}async load(){return null!=this.analysis&&this.addResolvingPromise(this.analysis.waitComputeExtent()),this}get observer(){return n$3(this.analysis,(e=>e.observer))}set observer(e){n$3(this.analysis,(s=>s.observer=e));}get targets(){return null!=this.analysis?this.analysis.targets:new V}set targets(e){n$2(e,this.analysis?.targets);}get fullExtent(){return null!=this.analysis?this.analysis.extent:null}get spatialReference(){return null!=this.analysis?this.analysis.spatialReference:null}releaseAnalysis(e){this.analysis===e&&(this.analysis=new j);}};e$1([y$1({json:{read:!1},readOnly:!0})],d.prototype,"type",void 0),e$1([y$1({type:["LineOfSightLayer"]})],d.prototype,"operationalLayerType",void 0),e$1([y$1({type:u$1,json:{read:!0,write:{isRequired:!0,ignoreOrigin:!0}}})],d.prototype,"observer",null),e$1([y$1({type:h,json:{read:!0,write:{ignoreOrigin:!0}}})],d.prototype,"targets",null),e$1([y$1({nonNullable:!0,json:{read:!1,write:!1}})],d.prototype,"analysis",void 0),e$1([y$1({readOnly:!0})],d.prototype,"fullExtent",null),e$1([y$1({readOnly:!0})],d.prototype,"spatialReference",null),e$1([y$1({readOnly:!0,json:{read:!1,write:!1,origins:{service:{read:!1,write:!1},"portal-item":{read:!1,write:!1},"web-document":{read:!1,write:!1}}}})],d.prototype,"opacity",void 0),e$1([y$1({type:["show","hide"]})],d.prototype,"listMode",void 0),d=e$1([a$1("esri.layers.LineOfSightLayer")],d);const f=d;
+
+export default f;
+
+//# sourceMappingURL=LineOfSightLayer-61953519.js.map

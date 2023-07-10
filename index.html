@@ -1,4 +1,7 @@
-<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Hub AI Bot</title> <script type="module" src="./build/hub-aibot.esm.js"></script> <script nomodule="" src="./build/hub-aibot.js"></script> <script type="module" src="https://js.arcgis.com/calcite-components/1.4.3/calcite.esm.js"></script> <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.3/calcite.css"> <script type="module" src="https://esri.github.io/hub-components/harnesses/build/hub-components.esm.js"></script> </head> <body> <!-- Delayed render so we can get the API key from URL parameters --> <div id="placeholder"></div> <style>body {
+<!doctype html><html dir="ltr" lang="en"><head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"> <title>Hub AI Bot</title> <script type="module" src="./build/hub-aibot.esm.js"></script> <script nomodule="" src="./build/hub-aibot.js"></script> <script type="module" src="https://js.arcgis.com/calcite-components/1.4.3/calcite.esm.js"></script> <link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.4.3/calcite.css"> <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css"> <!-- <script
+    type="module"
+    src="http://dev0024826.esri.com:8001/packages/@arcgis/map-components@1.0.0-beta.2/dist/arcgis-map-components/arcgis-map-components.esm.js"
+  ></script> --> <script type="module" src="./assets/hub-compass-maps/hub-compass-maps/hub-compass-maps.esm.js"></script> <script nomodule="" src="./assets/hub-compass-maps/hub-compass-maps/hub-compass-maps.js"></script> <script type="module" src="https://esri.github.io/hub-components/harnesses/build/hub-components.esm.js"></script> </head> <body> <!-- Delayed render so we can get the API key from URL parameters --> <div id="placeholder"></div> <style>body {
       font-family: sans-serif;
       margin: 0;
       padding: 0;
@@ -19,6 +22,7 @@
     identityEl.redirect = `${window.location}redirect.html`
     placeholderEl.appendChild(identityEl);
 
+    const postUpdateRate = 3000;
     document.addEventListener('arcgisAppIdentitySignedIn', () => {
       if(!botEl) {
         botEl = document.createElement("hub-aibot");
@@ -30,6 +34,13 @@
         
         placeholderEl.appendChild(botEl);
         console.debug("botEl", { botEl, key: botEl.apikey })
+
+        // Optional periodic updating
+        // const intervalID = setInterval(() => {
+        //   console.debug("Updating posts");
+        //   botEl.loadHistory()
+        // }, postUpdateRate);
+
       }
     })
     

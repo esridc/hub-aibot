@@ -76,7 +76,8 @@ export class HubAibot {
 
       if(post.body.match(/^AI:/))  {
         author = "hub";
-        post.body = post.body.replace(/^AI: /,'');
+        post.body = post.body.replace(/^AI: "/,'');
+        post.body = post.body.replace(/"$/,'');
         // Remove escaped quotes and quotes
         post.body = post.body.replace(/[\\\/]/g,'');
       }

@@ -40,7 +40,7 @@ export class HubChatMap {
           id="viewDiv"
           center = {[this.longitude, this.latitude]}
           zoom = {this.zoom}
-          datasetIds = {this.datasets}
+          datasetIds = {this.datasets as string[]}
         ></hub-compass-map>
         {/* <arcgis-map 
           id="viewDiv"

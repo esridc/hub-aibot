@@ -1,0 +1,12 @@
+import { hq as t, l as n, h8 as r, hd as e, h9 as P, L as i, a7 as g, hf as u, iw as v$1, it as p$1 } from './hub-compass-map-f4225e12.js';
+import { c, s } from './sphere-9c938e4a.js';
+
+/*
+All material copyright ESRI, All Rights Reserved, unless otherwise specified.
+See https://js.arcgis.com/4.27/esri/copyright.txt for details.
+*/
+function v(t$1){return t$1?{origin:t(t$1.origin),vector:t(t$1.vector)}:{origin:n(),vector:n()}}function p(t,r){const n=x.get();return n.origin=t,n.vector=r,n}function h(t,r=v()){return m(t.origin,t.vector,r)}function m(t,r$1,o=v()){return r(o.origin,t),r(o.vector,r$1),o}function b(t,r$1,e$1=v()){return r(e$1.origin,t),e(e$1.vector,r$1,t),e$1}function M(r,n){const c$1=e(c.get(),n,r.origin),s=P(r.vector,c$1),u=P(r.vector,r.vector),a=i(s/u,0,1),g$1=e(c.get(),g(c.get(),r.vector,a),c$1);return P(g$1,g$1)}function d(t,r){return Math.sqrt(M(t,r))}function j(t,r,n){return A(t,r,0,1,n)}function l(t,r,n){return u(n,t.origin,g(n,t.vector,r))}function A(r,n,u$1,a,g$1){const{vector:v,origin:p}=r,h=e(c.get(),n,p),m=P(v,h)/v$1(v);return g(g$1,v,i(m,u$1,a)),u(g$1,g$1,r.origin)}function B(t,r){if(q(t,p(r.origin,r.direction),!1,w)){const{tA:r,pB:n,distance2:o}=w;if(r>=0&&r<=1)return o;if(r<0)return p$1(t.origin,n);if(r>1)return p$1(u(c.get(),t.origin,t.vector),n)}return null}function k(t,r$1,o){return !!q(t,r$1,!0,w)&&(r(o,w.pA),!0)}function S(t,r){return q(t,r,!0,w)?w.distance2:null}function q(r,n,o,e){const i$1=1e-6,s=r.origin,a=u(c.get(),s,r.vector),g=n.origin,v=u(c.get(),g,n.vector),p=c.get(),h=c.get();if(p[0]=s[0]-g[0],p[1]=s[1]-g[1],p[2]=s[2]-g[2],h[0]=v[0]-g[0],h[1]=v[1]-g[1],h[2]=v[2]-g[2],Math.abs(h[0])<i$1&&Math.abs(h[1])<i$1&&Math.abs(h[2])<i$1)return !1;const m=c.get();if(m[0]=a[0]-s[0],m[1]=a[1]-s[1],m[2]=a[2]-s[2],Math.abs(m[0])<i$1&&Math.abs(m[1])<i$1&&Math.abs(m[2])<i$1)return !1;const b=p[0]*h[0]+p[1]*h[1]+p[2]*h[2],M=h[0]*m[0]+h[1]*m[1]+h[2]*m[2],d=p[0]*m[0]+p[1]*m[1]+p[2]*m[2],j=h[0]*h[0]+h[1]*h[1]+h[2]*h[2],l=(m[0]*m[0]+m[1]*m[1]+m[2]*m[2])*j-M*M;if(Math.abs(l)<i$1)return !1;let A=(b*M-d*j)/l,B=(b+M*A)/j;o&&(A=i(A,0,1),B=i(B,0,1));const k=c.get(),S=c.get();return k[0]=s[0]+A*m[0],k[1]=s[1]+A*m[1],k[2]=s[2]+A*m[2],S[0]=g[0]+B*h[0],S[1]=g[1]+B*h[1],S[2]=g[2]+B*h[2],e.tA=A,e.tB=B,e.pA=k,e.pB=S,e.distance2=p$1(k,S),!0}const w={tA:0,tB:0,pA:n(),pB:n(),distance2:0},x=new s((()=>v()));
+
+export { M, b, j, m, v };
+
+//# sourceMappingURL=lineSegment-b6a63a68.js.map

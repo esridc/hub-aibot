@@ -15,10 +15,16 @@ export enum HubChatAuthor {
     hub = "hub",
     system = "system"
 }
+
 export type HubChatMessage = {
     postId?: string,
     author: string,
     text: string,
     action?: string
 }
+export type HubCompassAction = {
+    type: string, // map, dataset, summarize
+    data: any, // center, zoom, etc.
+}
+
 export default HubAIModel;

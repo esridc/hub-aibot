@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ChatbotLayout, HubAIModel, HubChatMessage } from "./types/types";
+import { ChatbotLayout, HubAIModel, HubChatMessage, HubCompassAction } from "./types/types";
 export namespace Components {
     interface ArcgisHubIdentity {
         "client": string;
@@ -39,10 +39,11 @@ export namespace Components {
         "disabled": boolean;
     }
     interface HubChatMap {
-        "datasets": string[];
+        "datasets": string | string[];
         "latitude": number;
         "location": string;
         "longitude": number;
+        "zoom": number;
     }
     interface HubChatResponse {
         /**
@@ -53,6 +54,9 @@ export namespace Components {
           * Message to display If this message is deleted, this will be removed.
          */
         "message": HubChatMessage;
+    }
+    interface HubCompassHistory {
+        "history": HubCompassAction[];
     }
 }
 export interface HubChatInputCustomEvent<T> extends CustomEvent<T> {
@@ -108,6 +112,12 @@ declare global {
         prototype: HTMLHubChatResponseElement;
         new (): HTMLHubChatResponseElement;
     };
+    interface HTMLHubCompassHistoryElement extends Components.HubCompassHistory, HTMLStencilElement {
+    }
+    var HTMLHubCompassHistoryElement: {
+        prototype: HTMLHubCompassHistoryElement;
+        new (): HTMLHubCompassHistoryElement;
+    };
     interface HTMLElementTagNameMap {
         "arcgis-hub-identity": HTMLArcgisHubIdentityElement;
         "hub-aibot": HTMLHubAibotElement;
@@ -117,6 +127,7 @@ declare global {
         "hub-chat-input": HTMLHubChatInputElement;
         "hub-chat-map": HTMLHubChatMapElement;
         "hub-chat-response": HTMLHubChatResponseElement;
+        "hub-compass-history": HTMLHubCompassHistoryElement;
     }
 }
 declare namespace LocalJSX {
@@ -152,10 +163,11 @@ declare namespace LocalJSX {
         "onHubChatInputEntered"?: (event: HubChatInputCustomEvent<HubChatMessage>) => void;
     }
     interface HubChatMap {
-        "datasets"?: string[];
+        "datasets"?: string | string[];
         "latitude"?: number;
         "location"?: string;
         "longitude"?: number;
+        "zoom"?: number;
     }
     interface HubChatResponse {
         /**
@@ -167,6 +179,9 @@ declare namespace LocalJSX {
          */
         "message"?: HubChatMessage;
     }
+    interface HubCompassHistory {
+        "history"?: HubCompassAction[];
+    }
     interface IntrinsicElements {
         "arcgis-hub-identity": ArcgisHubIdentity;
         "hub-aibot": HubAibot;
@@ -176,6 +191,7 @@ declare namespace LocalJSX {
         "hub-chat-input": HubChatInput;
         "hub-chat-map": HubChatMap;
         "hub-chat-response": HubChatResponse;
+        "hub-compass-history": HubCompassHistory;
     }
 }
 export { LocalJSX as JSX };
@@ -190,6 +206,7 @@ declare module "@stencil/core" {
             "hub-chat-input": LocalJSX.HubChatInput & JSXBase.HTMLAttributes<HTMLHubChatInputElement>;
             "hub-chat-map": LocalJSX.HubChatMap & JSXBase.HTMLAttributes<HTMLHubChatMapElement>;
             "hub-chat-response": LocalJSX.HubChatResponse & JSXBase.HTMLAttributes<HTMLHubChatResponseElement>;
+            "hub-compass-history": LocalJSX.HubCompassHistory & JSXBase.HTMLAttributes<HTMLHubCompassHistoryElement>;
         }
     }
 }

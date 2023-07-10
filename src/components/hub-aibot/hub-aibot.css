@@ -182,3 +182,12 @@ hub-chat-map {
 .language-buttons button:active {
   background-color: #005da8;
 }
+
+#history {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  opacity: 0.8;
+  z-index: 105;
+}

@@ -20,7 +20,8 @@
   grid-area: text;
   width: fit-content;
   padding: 1rem;
-  color: midnightblue;
+  color: black;
+  font-size: 1.1rem;
 }
 
 .message {
@@ -65,4 +66,9 @@
   background-color:dodgerblue;
   color: white;
   border-radius: 15px 15px 0px 15px;
+}
+hub-chat-map {
+  display: block;
+  width: 100%;
+  height: 300px;
 }

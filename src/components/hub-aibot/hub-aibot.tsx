@@ -77,6 +77,8 @@ export class HubAibot {
       if(post.body.match(/^AI:/))  {
         author = "hub";
         post.body = post.body.replace(/^AI: /,'');
+        // Remove escaped quotes and quotes
+        post.body = post.body.replace(/[\\\/]/g,'');
       }
 
 
@@ -125,6 +127,13 @@ export class HubAibot {
     }
 
     const aiPost = await addChatHistory(this.currentChannel.id, `AI: ${responseText}`, post.id);
+
+    //TODO: store the actual command
+    this.hubCompassHistoryEl.history.push({
+      type: 'map',
+      data: {}
+    });
+
     console.debug("added to chat history", { message, aiPost });
 
     this.messages = [...this.messages, {
@@ -233,6 +242,7 @@ export class HubAibot {
   private channelsPanelEl:HTMLCalcitePanelElement;
   private shellPanelEl:HTMLCalciteShellPanelElement;
   private shellMapEl:HTMLCalciteShellPanelElement;
+  private hubCompassHistoryEl: HTMLHubCompassHistoryElement;
 
   private renderShell(content) {
     return (
@@ -258,12 +268,20 @@ export class HubAibot {
       </calcite-panel>
       {/* <calcite-shell-panel ref={(el) => this.shellMapEl = el} collapsed={true} slot="panel-end" id="shell-panel-end"> */}
         <calcite-panel heading="Map" slot="panel-end" >
-          <hub-chat-map></hub-chat-map>
+          <hub-chat-map
+            longitude={-77}
+            latitude={38.9}
+          ></hub-chat-map>
+          <hub-compass-history
+            id="history"
+            ref={(el) => this.hubCompassHistoryEl = el}
+          ></hub-compass-history>
         </calcite-panel>
       {/* </calcite-shell-panel> */}
   </calcite-shell>
     );
   }
+  
   
   /**
    * Change to this channel body
@@ -306,13 +324,11 @@ export class HubAibot {
       </div>);
   }
 
-  private readonly renderMap = `<hub-chat-map></hub-chat-map>`;
-
-  private renderIntro() {
-    return [
-      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'Welcome to the Hub Compass Chatbot!' }} allowFeedback={false}></hub-chat-response>,
-      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'How can I assist you today?' }} allowFeedback={false}></hub-chat-response>,
-      <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:`Here is where we are. ${this.renderMap}` }} allowFeedback={false}></hub-chat-response>
-    ]
-  }
+  // private renderIntro() {
+  //   return [
+  //     <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'Welcome to the Hub Compass Chatbot!' }} allowFeedback={false}></hub-chat-response>,
+  //     <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:'How can I assist you today?' }} allowFeedback={false}></hub-chat-response>,
+  //     <hub-chat-response class={`message author-hub`} message={{author: 'hub', text:`Here is where we are. ${this.renderMap}` }} allowFeedback={false}></hub-chat-response>
+  //   ]
+  // }
 }
